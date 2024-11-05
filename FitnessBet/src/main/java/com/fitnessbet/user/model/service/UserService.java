@@ -1,5 +1,8 @@
 package com.fitnessbet.user.model.service;
 
-public interface UserService {
+import com.fitnessbet.user.model.dto.User;
 
+public interface UserService {
+	
+	public void registUser(User user);
 }
