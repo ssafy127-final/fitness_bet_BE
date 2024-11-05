@@ -9,5 +9,10 @@
 		INSERT INTO user (id,pw,name,campus,class_num,gender,admin,phone)
 		VALUES(#{id},#{pw},#{name},#{campus},#{classNum},#{gender},#{admin},#{phone})
 	</insert>
-
+	
+	<select id="findById" parameterType="String" resultType="User">
+		SELECT * from user 
+		WHERE id = #{id};
+	</select>
+	
 </mapper> 

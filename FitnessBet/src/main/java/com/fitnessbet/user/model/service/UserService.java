@@ -4,5 +4,7 @@ import com.fitnessbet.user.model.dto.User;
 
 public interface UserService {
 	
-	public void registUser(User user);
+	public int registUser(User user);
+	
+	public boolean authenticate(String id, String pw);
 }
