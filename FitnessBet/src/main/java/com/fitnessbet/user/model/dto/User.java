@@ -11,9 +11,10 @@ public class User {
 	private int currentPoint; // 현재 보유 포인트
 	private int totalPoint; // 누적 포인트
 	private Date visited; // 마지막 방문 날짜
-	private boolean gender; // T : 여성 / F : 남성
-	private boolean admin; // T : 관리자 / F : 일반
-	private boolean accept; // T : 가입 승인 완 / F : 가입 대기중
+	private int gender; // 0 : 여성 / 1 : 남성
+	private int admin; // 0 : 일반 / 1 : 관리자
+	
+	private int accept; // 0 : 가입 대기중  / 1: 가입 승인 완
 	private String phone; // 전화번호
 	public String getId() {
 		return id;
@@ -63,22 +64,23 @@ public class User {
 	public void setVisited(Date visited) {
 		this.visited = visited;
 	}
-	public boolean isGender() {
+	
+	public int getGender() {
 		return gender;
 	}
-	public void setGender(boolean gender) {
+	public void setGender(int gender) {
 		this.gender = gender;
 	}
-	public boolean isAdmin() {
+	public int getAdmin() {
 		return admin;
 	}
-	public void setAdmin(boolean admin) {
+	public void setAdmin(int admin) {
 		this.admin = admin;
 	}
-	public boolean isAccept() {
+	public int getAccept() {
 		return accept;
 	}
-	public void setAccept(boolean accept) {
+	public void setAccept(int accept) {
 		this.accept = accept;
 	}
 	public String getPhone() {
