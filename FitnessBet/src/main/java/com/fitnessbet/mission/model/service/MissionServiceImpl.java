@@ -15,8 +15,9 @@ public class MissionServiceImpl implements MissionService {
 	}
 
 	@Override
-	public void modifyMission(Mission mission) {
-		missionDao.updateMission(mission);
+	public boolean modifyMission(Mission mission) {
+		int result = missionDao.updateMission(mission);
+		return result == 1;
 	}
 
 	@Override
@@ -24,5 +25,11 @@ public class MissionServiceImpl implements MissionService {
 		Mission oldMission = missionDao.selectOne(id);
 		return oldMission;
 	}
+
+	@Override
+	public boolean registMission(Mission mission) {
+	    return missionDao.insertMission(mission) == 1;
+	}
+
 
 }
