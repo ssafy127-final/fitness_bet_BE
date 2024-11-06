@@ -1,5 +1,7 @@
 package com.fitnessbet.user.model.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.fitnessbet.user.model.dao.UserDao;
@@ -15,24 +17,42 @@ public class UserServiceImpl implements UserService{
 	}
 	
 	@Override
-	public int registUser(User user) {
+	public boolean registUser(User user) {
 		int result = userDao.insertUser(user);
-		return result;
+		return result == 1;
 		
 	}
 
 	@Override
-	public boolean authenticate(String id, String pw) {
+	public User authenticate(String id, String pw) {
 		User user = userDao.findById(id);
-		System.out.println("id" + id);
-		System.out.println("pw" + pw);
-		System.out.println(user.toString());
+//		System.out.println("id" + id);
+//		System.out.println("pw" + pw);
+//		System.out.println(user.toString());
 		if(user != null) {
 			if(pw.equals(user.getPw())) {
-				return true;
+				return user;
 			}
 		}
-		return false;
+		return null;
+	}
+
+	@Override
+	public boolean rejectUser(String id) {
+		int result = userDao.deleteUser(id);
+		return result == 1;
+	}
+
+	@Override
+	public List<User> getList(int classNum) {
+		List<User> userList = userDao.selectAll(classNum);
+		return userList;
+	}
+
+	@Override
+	public boolean approve(String id) {
+		int result = userDao.updateAccepted(id);
+		return result == 1;
 	}
 
 
