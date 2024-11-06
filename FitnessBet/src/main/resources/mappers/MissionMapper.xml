@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fitnessbet.mission.model.dao.MissionDao">
+
+	<insert id="insertMission" parameterType="Mission" >
+		INSERT INTO mission (content, min_m, max_m, min_w, max_w)
+		VALUES (#{content}, #{maleMin}, #{maleMax}, #{femaleMin},#{femaleMax});
+	</insert>
+	
+	<delete id="deleteMission" parameterType="int">
+		DELETE FROM mission
+		WHERE id = #{id};
+	</delete>
+	
+	<update id="updateMission" parameterType="Mission">
+		UPDATE mission SET 
+		content = #{content},
+		min_m = #{maleMin},
+		max_m = #{maleMax},
+		min_w = #{femaleMin},
+		max_w = #{femaleMax}
+		WHERE id = #{id};
+	</update>
+	
+	<select id="selectOne" parameterType="int" resultType="Mission">
+		SELECT * FROM mission WHERE id = #{id};
+	</select>
+
+
+
+</mapper>
