@@ -7,7 +7,8 @@ public class Mission {
 	private int maleMax; // 남자 최대 개수
 	private int femaleMin; // 여자 최소 개수
 	private int femaleMax; // 여자 최대 개수
-
+	
+	
 	public int getId() {
 		return id;
 	}

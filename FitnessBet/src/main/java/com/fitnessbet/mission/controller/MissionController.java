@@ -1,5 +1,7 @@
 package com.fitnessbet.mission.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,20 +18,22 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+
 
 @RestController
 @RequestMapping("/mission")
 public class MissionController {
 
-	MissionService ms;
+	private final MissionService ms;
 
 	private static final int TRUE = 1;
 
 	public MissionController(MissionService ms) {
 		this.ms = ms;
 	}
-
-	@PostMapping("")
+	
+	@PostMapping("")			// 미션 등록
 	public ResponseEntity<?> regist(@RequestBody Mission mission, HttpServletRequest request) {
 		HttpSession session = request.getSession(false);
 
@@ -62,7 +66,7 @@ public class MissionController {
 		return false;
 	}
 
-	// 관리자 권한 확인
+	// 관리자 권한 확인 / 프론트에서 관리자만 들어올 수 있게 설정할 것이지만, 이중 차단 ^^
 	private boolean verifyAdmin(HttpServletRequest request) {
 		HttpSession session = request.getSession(false);
 		if (session == null) {
@@ -75,7 +79,7 @@ public class MissionController {
 		return false;
 	}
 
-	@PutMapping("/{id}")
+	@PutMapping("/{id}")	// 미션 정보 수정
 	public ResponseEntity<?> modify(@PathVariable("id") int id, @RequestBody Mission mission, HttpServletRequest request) {
 		
 		HttpSession session = request.getSession(false);
@@ -127,7 +131,7 @@ public class MissionController {
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("미션 정보 수정 실패");
 	}
 
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/{id}") 	//미션 정보 삭제
 	public ResponseEntity<?> remove(@PathVariable("id") int id, HttpServletRequest request) {
 		HttpSession session = request.getSession(false);
 
@@ -147,5 +151,22 @@ public class MissionController {
 		}
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("미션 삭제에 실패했습니다.");
 	}
+	
+	@GetMapping("")
+	public ResponseEntity<?> getList(HttpServletRequest request) {
+		
+		if (!verifyAdmin(request)) { // 관리자 권한 확인
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("관리자 권한이 필요합니다.");
+		}
+		List<Mission> list = ms.getAllMissionList();
+		
+		if(list == null || list.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body("현재 저장된 미션이 없습니다.");
+		}
+		
+		
+		return ResponseEntity.ok(list);
+	}
+	
 
 }
