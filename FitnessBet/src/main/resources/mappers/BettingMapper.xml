@@ -4,8 +4,27 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.fitnessbet.betting.model.dao.BettingDao">
+	<resultMap type="Betting" id="BettingWithChallengerInfo" autoMapping="true">
+		<id property="id" column="id"/>
+		<association property="User" javaType="Betting">
+			<id property="id" column="id"/>
+			<result property="campus" column="campus"/>
+			<result property="classNum" column="class_num"/>
+		</association>
+	</resultMap>
 
-	<select id="selectAll" resultType="Betting">
-		SELECT * FROM betting
+	<select id="selectAll" resultMap="BettingWithChallengerInfo" parameterType="Betting">
+		SELECT B.id, B.challenger, B.mission_id, B.success_cnt, B.fail_cnt, B.success_point, B.fail_point, B.result, B.reg_date, U.id, U.campus, U.class_num
+		  FROM BETTING B
+		 INNER JOIN USER U
+		    ON B.challenger = U.id
+		 WHERE U.campus = #{user.campus}
+		   AND U.class_num = #{user.classNum}
+		   <if test="result == 0">
+		   AND B.result = 0
+		   </if>
+		   <if test="result != 0">
+		   AND B.result != 0
+		   </if>
 	</select>
 </mapper>
