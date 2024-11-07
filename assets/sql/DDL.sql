@@ -1,3 +1,7 @@
+DROP DATABASE IF EXISTS fitnessbet;
+CREATE DATABASE fitnessbet;
+USE fitnessbet;
+
 DROP TABLE IF EXISTS `USER`;
 CREATE TABLE `USER` (
 	`id`	VARCHAR(15)	NOT NULL,
@@ -38,7 +42,7 @@ CREATE TABLE `BETTING` (
 	`fail_cnt`	int	NOT NULL	DEFAULT 0	COMMENT '미션 실패 배팅 수',
 	`success_point`	int	NOT NULL	DEFAULT 0,
 	`fail_point`	int	NOT NULL	DEFAULT 0,
-	`result`	int	NULL,
+	`result`	int	NOT NULL	DEFAULT 0,
 	`reg_date`	date	NOT NULL
 );
 
