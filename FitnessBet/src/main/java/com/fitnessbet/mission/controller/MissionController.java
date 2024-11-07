@@ -44,7 +44,7 @@ public class MissionController {
 		if (!isValidMission(mission)) { // 유효한 데이터로 미션을 추가했는지 확인
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잘못된 요청입니다. 입력값을 다시 확인하세요");
 		}
-
+//		============================================== 권한, 유효 데이터 확인 ========================================================	
 		boolean isRegisted = ms.registMission(mission);
 
 		if (isRegisted) {
@@ -91,6 +91,7 @@ public class MissionController {
 		if (!isValidMission(mission)) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잘못된 요청입니다. 입력값을 확인하세요.");
 		}
+//		============================================== 권한, 유효 데이터 확인 ========================================================		
 		Mission oldMission = ms.getMissionById(id);
 		if (oldMission == null) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 미션을 찾을 수 없습니다.");
@@ -137,6 +138,9 @@ public class MissionController {
 		if (!verifyAdmin(request)) { // 관리자 권한 확인
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("삭제를 위한 관리자 권한이 없습니다.");
 		}
+		
+//		============================================== 권한 확인 ========================================================	
+		
 		boolean isDeleted = ms.removeMission(id);
 		if (isDeleted) {
 			return ResponseEntity.status(HttpStatus.OK).body("성공적으로 삭제했습니다.");
