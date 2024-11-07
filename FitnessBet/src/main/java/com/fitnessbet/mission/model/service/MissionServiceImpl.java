@@ -1,5 +1,7 @@
 package com.fitnessbet.mission.model.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.fitnessbet.mission.model.dao.MissionDao;
@@ -35,6 +37,12 @@ public class MissionServiceImpl implements MissionService {
 	public boolean removeMission(int id) {
 		int result = missionDao.deleteMission(id);
 		return result == 1;
+	}
+
+	@Override
+	public List<Mission> getAllMissionList() {
+		List<Mission> list = missionDao.selectAll();
+		return list;
 	}
 
 

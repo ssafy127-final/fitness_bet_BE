@@ -1,5 +1,7 @@
 package com.fitnessbet.mission.model.service;
 
+import java.util.List;
+
 import com.fitnessbet.mission.model.dto.Mission;
 
 public interface MissionService {
@@ -11,6 +13,8 @@ public interface MissionService {
 	public boolean registMission(Mission mission);
 
 	public boolean removeMission(int id);
+
+	public List<Mission> getAllMissionList();
 	
 	
 }
