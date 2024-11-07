@@ -9,6 +9,8 @@ public interface MissionService {
 	public Mission getMissionById(int id);
 	
 	public boolean registMission(Mission mission);
+
+	public boolean removeMission(int id);
 	
 	
 }

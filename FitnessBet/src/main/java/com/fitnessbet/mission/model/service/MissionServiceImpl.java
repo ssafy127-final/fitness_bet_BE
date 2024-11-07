@@ -31,5 +31,11 @@ public class MissionServiceImpl implements MissionService {
 	    return missionDao.insertMission(mission) == 1;
 	}
 
+	@Override
+	public boolean removeMission(int id) {
+		int result = missionDao.deleteMission(id);
+		return result == 1;
+	}
+
 
 }
