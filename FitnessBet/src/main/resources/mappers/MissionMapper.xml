@@ -29,6 +29,9 @@
 		SELECT * FROM mission WHERE id = #{id};
 	</select>
 
-
+	<select id = "selectAll" resultType="Mission">
+		SELECT id , content, min_m as maleMin, max_m as maleMax, min_w as femaleMin, max_w as femaleMax 
+		FROM mission;
+	</select>
 
 </mapper>

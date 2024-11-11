@@ -22,20 +22,37 @@
 	</delete>
 	
 	<!-- 반 별 모든 학생들 리스트 뽑기 -->
-	<select id="selectAll" parameterType="int" resultType="User">
+	<select id="selectAll" parameterType="User" resultType="User">
 		SELECT * FROM user
-		WHERE class_num = #{classNum};
+		WHERE class_num = #{classNum}
+		AND campus = #{campus};
+	</select>
+	
+	<!-- 반 별 모든 학생들 수 반환 -->
+	<select id="countAll" parameterType="User" resultType="int">
+		SELECT count(*) FROM user
+		WHERE class_num = #{classNum}
+		AND campus = #{campus};
 	</select>
 	
 	<!-- 가입 대기 목록 뽑기 / 가입대기는 accept 값이 항상 0이므로 파라미터 입력이 필요없다. -->
 	<select id="selectUnapproved" resultType="User">
 		SELECT * FROM user
-		WHERE accept = 0;
+		WHERE class_num = #{classNum}
+		AND campus = #{campus}
+		AND accept = 0;
 	</select>
 	
 	<update id="updateAccepted" parameterType="String">
 		UPDATE user SET accept = 1
 		WHERE id = #{id};
 	</update>
+	
+	<select id = "selectChallenger" parameterType="User" resultType="User">
+		SELECT * FROM user
+		WHERE class_num = #{classNum}
+		AND campus = #{campus}
+		LIMIT 1 OFFSET #{randomNum};
+	</select>
 	
 </mapper> 
