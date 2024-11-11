@@ -51,5 +51,18 @@ public class MissionServiceImpl implements MissionService {
 		return list;
 	}
 
+	@Override
+	@Transactional
+	public int countMisson() {
+		int cnt = missionDao.countAll();
+		return cnt;
+	}
+
+	@Override
+	@Transactional
+	public Mission getMissionByIndex(int randomNum) {
+		return missionDao.selectMissionByIndex(randomNum);
+	}
+
 
 }

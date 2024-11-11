@@ -16,7 +16,14 @@ public interface MissionDao {
 
 	// 4. 미션 목록 불러오기
 	public List<Mission> selectAll();
-
+	
+	// 5. 미션 정보 불러오기
 	public Mission selectOne(int id);
+	
+	// 6. 현재 존재하는 미션 개수 반환하기
+	public int countAll();
+	
+	//7. randomNum 위치에 있는 미션 반환하기
+	public Mission selectMissionByIndex(int randomNum);
 
 }

@@ -16,5 +16,7 @@ public interface MissionService {
 
 	public List<Mission> getAllMissionList();
 	
+	public int countMisson();
 	
+	public Mission getMissionByIndex(int randomNum);
 }
