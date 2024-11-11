@@ -14,7 +14,7 @@
 	</resultMap>
 
 	<select id="selectAll" resultMap="BettingWithChallengerInfo" parameterType="Betting">
-		SELECT B.id, B.challenger, B.mission_id, B.success_cnt, B.fail_cnt, B.success_point, B.fail_point, B.result, B.reg_date, U.id, U.campus, U.class_num
+		SELECT B.id, B.challenger, B.mission_id, B.mission_cnt, B.success_cnt, B.fail_cnt, B.success_point, B.fail_point, B.result, B.reg_date, U.id, U.campus, U.class_num
 		  FROM BETTING B
 		 INNER JOIN USER U
 		    ON B.challenger = U.id
@@ -27,4 +27,8 @@
 		   AND B.result != 0
 		   </if>
 	</select>
+	<insert id="insertBetting" parameterType="Betting">
+		INSERT INTO BETTING (challenger, mission_id, mission_cnt,reg_date)
+		VALUES (#{challenger}, #{missionId}, #{missionCnt}, current_timestamp())
+	</insert>
 </mapper>
