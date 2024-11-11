@@ -17,4 +17,6 @@ public interface UserService {
 	public boolean approve(String id);
 	
 	public int countUser(User user);
+	
+	public User selectChallenger(User user);
 }
