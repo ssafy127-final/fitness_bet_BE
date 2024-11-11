@@ -3,11 +3,20 @@ package com.fitnessbet.betting.model.dao;
 import java.util.List;
 
 import com.fitnessbet.betting.model.dto.Betting;
+import com.fitnessbet.betting.model.dto.BettingHistory;
 
 public interface BettingDao {
 
 	List<Betting> selectAll(Betting betting);
 
 	int insertBetting(Betting newBetting);
+
+	int finishBetting(Betting betting);
+
+	int joinBetting(Betting betting);
+
+	int addBetHistory(BettingHistory bettingInfo);
+
+	Betting selectOneBettingById(int bettingId);
 
 }

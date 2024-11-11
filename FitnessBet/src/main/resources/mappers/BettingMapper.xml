@@ -27,8 +27,27 @@
 		   AND B.result != 0
 		   </if>
 	</select>
+	
 	<insert id="insertBetting" parameterType="Betting">
 		INSERT INTO BETTING (challenger, mission_id, mission_cnt,reg_date)
 		VALUES (#{challenger}, #{missionId}, #{missionCnt}, current_timestamp())
 	</insert>
+	
+	<insert id="addBetHistory" parameterType="BettingHistory">
+		INSERT INTO BETTING_HISTORY (betting_id, player, point, choice)
+		VALUES (#{bettingId}, #{player}, #{point}, #{choice})
+	</insert>
+	
+	<update id="joinBetting" parameterType="Betting">
+		UPDATE BETTING
+		SET success_cnt = #{successCnt}, fail_cnt = #{failCnt}, success_point = #{successPoint}, fail_point = #{failPoint}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="finishBetting" parameterType="Betting"></update>
+	
+	<select id="selectOneBettingById" parameterType="int" resultType="Betting">
+		SELECT * FROM BETTING WHERE id = #{bettingId}
+	</select>
+	
 </mapper>
