@@ -8,4 +8,6 @@ public interface BettingDao {
 
 	List<Betting> selectAll(Betting betting);
 
+	int insertBetting(Betting newBetting);
+
 }

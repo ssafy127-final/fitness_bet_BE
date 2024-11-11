@@ -38,6 +38,7 @@ CREATE TABLE `BETTING` (
 	`id`	int	NOT NULL	COMMENT 'auto_increment',
 	`challenger`	VARCHAR(15)	NOT NULL,
 	`mission_id`	int	NOT NULL	COMMENT 'auto_increment',
+    `mission_cnt` int	NOT NULL,
 	`success_cnt`	int	NOT NULL	DEFAULT 0	COMMENT '미션 성공 배팅 수',
 	`fail_cnt`	int	NOT NULL	DEFAULT 0	COMMENT '미션 실패 배팅 수',
 	`success_point`	int	NOT NULL	DEFAULT 0,
