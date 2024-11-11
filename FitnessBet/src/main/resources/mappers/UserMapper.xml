@@ -22,8 +22,15 @@
 	</delete>
 	
 	<!-- 반 별 모든 학생들 리스트 뽑기 -->
-	<select id="selectAll" parameterType="int" resultType="User">
+	<select id="selectAll" parameterType="User" resultType="User">
 		SELECT * FROM user
+		WHERE class_num = #{classNum}
+		AND campus = #{campus};
+	</select>
+	
+	<!-- 반 별 모든 학생들 수 반환 -->
+	<select id="countAll" parameterType="User" resultType="int">
+		SELECT count(*) FROM user
 		WHERE class_num = #{classNum}
 		AND campus = #{campus};
 	</select>

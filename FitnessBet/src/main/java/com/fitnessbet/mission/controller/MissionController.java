@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 
-
 @RestController
 @RequestMapping("/mission")
 public class MissionController {
@@ -32,8 +31,8 @@ public class MissionController {
 	public MissionController(MissionService ms) {
 		this.ms = ms;
 	}
-	
-	@PostMapping("")			// 미션 등록
+
+	@PostMapping("") // 미션 등록
 	public ResponseEntity<?> regist(@RequestBody Mission mission, HttpServletRequest request) {
 		HttpSession session = request.getSession(false);
 
@@ -79,19 +78,20 @@ public class MissionController {
 		return false;
 	}
 
-	@PutMapping("/{id}")	// 미션 정보 수정
-	public ResponseEntity<?> modify(@PathVariable("id") int id, @RequestBody Mission mission, HttpServletRequest request) {
-		
+	@PutMapping("/{id}") // 미션 정보 수정
+	public ResponseEntity<?> modify(@PathVariable("id") int id, @RequestBody Mission mission,
+			HttpServletRequest request) {
+
 		HttpSession session = request.getSession(false);
 
 		if (session == null) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
 		}
-		
+
 		if (!verifyAdmin(request)) { // 관리자 권한 확인
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("수정을 위한 관리자 권한이 없습니다.");
 		}
-		
+
 		if (!isValidMission(mission)) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잘못된 요청입니다. 입력값을 확인하세요.");
 		}
@@ -131,42 +131,40 @@ public class MissionController {
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("미션 정보 수정 실패");
 	}
 
-	@DeleteMapping("/{id}") 	//미션 정보 삭제
+	@DeleteMapping("/{id}") // 미션 정보 삭제
 	public ResponseEntity<?> remove(@PathVariable("id") int id, HttpServletRequest request) {
 		HttpSession session = request.getSession(false);
 
 		if (session == null) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
 		}
-		
+
 		if (!verifyAdmin(request)) { // 관리자 권한 확인
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("삭제를 위한 관리자 권한이 없습니다.");
 		}
-		
+
 //		============================================== 권한 확인 ========================================================	
-		
+
 		boolean isDeleted = ms.removeMission(id);
 		if (isDeleted) {
 			return ResponseEntity.status(HttpStatus.OK).body("성공적으로 삭제했습니다.");
 		}
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("미션 삭제에 실패했습니다.");
 	}
-	
+
 	@GetMapping("")
 	public ResponseEntity<?> getList(HttpServletRequest request) {
-		
+
 		if (!verifyAdmin(request)) { // 관리자 권한 확인
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("관리자 권한이 필요합니다.");
 		}
 		List<Mission> list = ms.getAllMissionList();
-		
-		if(list == null || list.isEmpty()) {
+
+		if (list == null || list.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body("현재 저장된 미션이 없습니다.");
 		}
-		
-		
+
 		return ResponseEntity.ok(list);
 	}
-	
 
 }

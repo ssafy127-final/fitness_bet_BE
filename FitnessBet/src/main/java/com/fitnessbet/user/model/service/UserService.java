@@ -12,7 +12,9 @@ public interface UserService {
 	
 	public boolean rejectUser(String id);
 	
-	public List<User> getList(int classNum);
+	public List<User> getList(User user);
 	
 	public boolean approve(String id);
+	
+	public int countUser(User user);
 }

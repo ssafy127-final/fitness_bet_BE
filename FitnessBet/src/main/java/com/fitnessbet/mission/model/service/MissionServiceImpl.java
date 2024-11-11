@@ -10,7 +10,7 @@ import com.fitnessbet.mission.model.dto.Mission;
 @Service
 public class MissionServiceImpl implements MissionService {
 
-	MissionDao missionDao;
+	private final MissionDao missionDao;
 
 	public MissionServiceImpl(MissionDao missionDao) {
 		this.missionDao = missionDao;
