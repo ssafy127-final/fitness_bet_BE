@@ -26,9 +26,6 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public User authenticate(String id, String pw) {
 		User user = userDao.findById(id);
-//		System.out.println("id" + id);
-//		System.out.println("pw" + pw);
-//		System.out.println(user.toString());
 		if(user != null) {
 			if(pw.equals(user.getPw())) {
 				return user;
@@ -44,8 +41,8 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public List<User> getList(int classNum) {
-		List<User> userList = userDao.selectAll(classNum);
+	public List<User> getList(User user) { // 유저 객체를 모두 담아서, classNum과 campus를 꺼내씀
+		List<User> userList = userDao.selectAll(user);
 		return userList;
 	}
 
@@ -53,6 +50,11 @@ public class UserServiceImpl implements UserService{
 	public boolean approve(String id) {
 		int result = userDao.updateAccepted(id);
 		return result == 1;
+	}
+
+	@Override
+	public int countUser(User user) {
+		return userDao.countAll(user);
 	}
 
 
