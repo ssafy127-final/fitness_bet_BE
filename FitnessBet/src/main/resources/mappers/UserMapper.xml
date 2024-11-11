@@ -48,4 +48,11 @@
 		WHERE id = #{id};
 	</update>
 	
+	<select id = "selectChallenger" parameterType="User" resultType="User">
+		SELECT * FROM user
+		WHERE class_num = #{classNum}
+		AND campus = #{campus}
+		LIMIT 1 OFFSET #{randomNum};
+	</select>
+	
 </mapper> 
