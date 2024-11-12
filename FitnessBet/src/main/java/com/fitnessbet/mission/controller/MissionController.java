@@ -69,6 +69,7 @@ public class MissionController {
 		HttpSession session = request.getSession(false);
 		if (session == null) {
 			System.out.println("세션 없음");
+			return false;
 		}
 		int isAdmin = (int) session.getAttribute("isAdmin");
 		if (isAdmin == TRUE) {
