@@ -14,6 +14,8 @@ public class Betting {
 	private int result;
 	private String regDate;
 	
+	
+
 	public int getMissionCnt() {
 		return missionCnt;
 	}
