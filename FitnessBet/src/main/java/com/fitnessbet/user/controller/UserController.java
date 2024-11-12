@@ -11,6 +11,8 @@ import com.fitnessbet.user.model.service.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -62,6 +64,8 @@ public class UserController {
 			if (user.getAccept() == APPROVED) { // 0 은 가입 대기중 / 1은 가입 승인 완료
 				newSession.setAttribute("userName", user.getName());
 				newSession.setAttribute("isAdmin", user.getAdmin()); // 관리자인지 아닌지 세션에 저장
+				newSession.setAttribute("campus", user.getCampus());
+				newSession.setAttribute("classNum", user.getClassNum());
 				newSession.setMaxInactiveInterval(SESSION_TIMEOUT); // 1시간 동안 아무 상호작용 없으면 자동 세션 만료
 				return ResponseEntity.ok("로그인 성공");
 			}
@@ -112,6 +116,38 @@ public class UserController {
 		}
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("승인은 관리자만 가능합니다.");
 	}
-	
 
+	@GetMapping("/list")
+	public ResponseEntity<?> getList(HttpServletRequest request) {
+		if (!verifyAdmin(request)) { // 관리자 권한 확인
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("관리자 권한이 필요합니다.");
+		}
+		HttpSession session = request.getSession(false);
+		
+		if(session.getAttribute("classNum") == null || session.getAttribute("campus") == null) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("필수 세션 속성이 누락되었습니다.");
+		}
+		
+		int classNum = (int) session.getAttribute("classNum");
+		String campus = (String) session.getAttribute("campus");
+		User user = new User();
+		user.setClassNum(classNum);
+		user.setCampus(campus);
+		
+		List<User> list = userService.getList(user);
+		return ResponseEntity.status(HttpStatus.OK).body(list);
+	}
+
+	private boolean verifyAdmin(HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			System.out.println("세션 만료 혹은 로그인 해야함");
+			return false;
+		}
+		int isAdmin = (int) session.getAttribute("isAdmin");
+		if (isAdmin == TRUE) {
+			return true;
+		}
+		return false;
+	}
 }
