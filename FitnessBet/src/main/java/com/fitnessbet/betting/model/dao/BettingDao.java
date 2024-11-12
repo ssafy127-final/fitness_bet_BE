@@ -19,4 +19,8 @@ public interface BettingDao {
 
 	Betting selectOneBettingById(int bettingId);
 
+	int changeBettingStatusDone(int id);
+
+	List<BettingHistory> selectWinner(Betting betting);
+
 }

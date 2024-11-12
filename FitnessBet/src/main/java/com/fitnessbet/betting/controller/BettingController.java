@@ -48,7 +48,17 @@ public class BettingController {
 		return new ResponseEntity<>("생성 실패", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@PutMapping("")
+	// 베팅 종료(관리자 가능)
+	@PutMapping("/{id}/stop")
+	public ResponseEntity<String> stopBetting(@PathVariable("id") int id){
+		if(service.stopBetting(id)) {
+			return new ResponseEntity<>("종료 완료", HttpStatus.OK);
+		}
+		return new ResponseEntity<>("종료 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	// 베팅 결과 입력
+	@PutMapping("/{id}/finish")
 	public ResponseEntity<String> finishBetting(@RequestBody Betting betting){
 		if(service.finishBetting(betting)) {
 			return new ResponseEntity<>("종료 완료", HttpStatus.OK);

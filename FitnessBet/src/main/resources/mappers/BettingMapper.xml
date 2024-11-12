@@ -40,14 +40,28 @@
 	
 	<update id="joinBetting" parameterType="Betting">
 		UPDATE BETTING
-		SET success_cnt = #{successCnt}, fail_cnt = #{failCnt}, success_point = #{successPoint}, fail_point = #{failPoint}
-		WHERE id = #{id}
+		   SET success_cnt = #{successCnt}, fail_cnt = #{failCnt}, success_point = #{successPoint}, fail_point = #{failPoint}
+		 WHERE id = #{id}
 	</update>
 	
-	<update id="finishBetting" parameterType="Betting"></update>
+	<update id="finishBetting" parameterType="Betting">
+		UPDATE BETTING
+		   SET result = #{result}
+		 WHERE id = #{id}
+	</update>
 	
 	<select id="selectOneBettingById" parameterType="int" resultType="Betting">
 		SELECT * FROM BETTING WHERE id = #{bettingId}
+	</select>
+	
+	<update id="changeBettingStatusDone" parameterType="int">
+		UPDATE BETTING
+		   SET result = 0
+		 WHERE id = #{id}
+	</update>
+	
+	<select id="selectWinner" parameterType="Betting" resultType="BettingHistory">
+		SELECT * FROM BETTING_HISTORY WHERE betting_id = #{id} AND choice = #{result}
 	</select>
 	
 </mapper>
