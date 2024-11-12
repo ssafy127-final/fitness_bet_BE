@@ -72,5 +72,17 @@ public class UserServiceImpl implements UserService{
         return challenger;
     }
 
+	@Override
+	public int addPoint() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int minusPoint() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 
 }

@@ -60,8 +60,10 @@ public class MissionServiceImpl implements MissionService {
 
 	@Override
 	@Transactional
-	public Mission getMissionByIndex(int randomNum) {
-		return missionDao.selectMissionByIndex(randomNum);
+	public Mission getMissionByIndex(){
+	    int cnt = missionDao.countAll();
+	    int newBettingMissionNum = (int) (Math.random() * cnt);
+	    return  missionDao.selectMissionByIndex(newBettingMissionNum);
 	}
 
 
