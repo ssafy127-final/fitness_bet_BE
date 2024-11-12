@@ -16,4 +16,6 @@ public interface BettingService {
 
 	boolean joinBetting(BettingHistory bettingInfo);
 
+	boolean stopBetting(int id);
+
 }
