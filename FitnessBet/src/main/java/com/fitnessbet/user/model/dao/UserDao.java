@@ -20,4 +20,6 @@ public interface UserDao {
 	public int countAll(User user);
 	
 	public User selectChallenger(User user);
+	
+	public int updateCurrentPoint(User user);
 }

@@ -55,4 +55,9 @@
 		LIMIT 1 OFFSET #{randomNum};
 	</select>
 	
+	<update id="updateCurrentPoint" parameterType="User">
+	UPDATE user SET current_point = #{currentPoint}, total_point = #{totalPoint}
+	WHERE id = #{id};
+	</update>
+	
 </mapper> 
