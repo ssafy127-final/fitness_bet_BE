@@ -19,8 +19,8 @@ public interface UserService {
 	public int countUser(User user);
 	
 	public User selectChallenger(User user);
-	//이겼을 때 
-	public int addPoint();
-	// 졌을 때
-	public int minusPoint();
+	
+	public int calculateReward(String id, int reward);
+	
+	public int minusBetPoint(String id, int betPoint);
 }
