@@ -55,8 +55,13 @@
 		LIMIT 1 OFFSET #{randomNum};
 	</select>
 	
-	<update id="updateCurrentPoint" parameterType="User">
+	<update id="updateReward" parameterType="User">
 	UPDATE user SET current_point = #{currentPoint}, total_point = #{totalPoint}
+	WHERE id = #{id};
+	</update>
+	
+	<update id="minusBettingPoint" parameterType="User">
+	UPDATE user SET current_point = #{currentPoint}
 	WHERE id = #{id};
 	</update>
 	
