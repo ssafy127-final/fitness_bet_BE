@@ -49,13 +49,17 @@ public class BettingServiceImpl implements BettingService {
 	public boolean createBetting(User user) {
 		Betting newBetting = new Betting();
 		// 미션 몇개인지 가져오기
-		int cnt = missionDao.getMissionCnt();
-		// 랜덤 돌리기 => 나온 숫자로 리밋 걸어서 해당 번호꺼 종목이랑 범위 가져오기
-		int newBettingMissionNum = (int) (Math.random() * cnt);
-		Mission mission = missionDao.getMission(newBettingMissionNum);
+//		int cnt = missionDao.getMissionCnt();
+//		// 랜덤 돌리기 => 나온 숫자로 리밋 걸어서 해당 번호꺼 종목이랑 범위 가져오기
+//		int newBettingMissionNum = (int) (Math.random() * cnt);
+//		Mission mission = missionDao.getMission(newBettingMissionNum);
+		// service에서 가져오기
+		
+		
 		// 사람 랜덤돌리기
-		user.setRandomNum((int) (Math.random() * userDao.getPeopleCnt(user)));
-		User challenger = userDao.selectChallenger(user);
+//		user.setRandomNum((int) (Math.random() * userDao.getPeopleCnt(user)));
+//		User challenger = userDao.selectChallenger(user);
+		// service에서 가져오기
 		newBetting.setChallenger(challenger.getId());
 
 		// 성별 따라 범위에서 랜덤돌리기

@@ -68,7 +68,7 @@ public class BettingController {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getBettingAndUserInfo(){
-		// 유저가 배팅 상세 눌렀을 때 나오는 정보 리턴하기(배팅 가능한 포인트, 배팅 정보)
+		// 유저가 배팅 상세 눌렀을 때 나오는 정보 리턴하기(배팅 가능한 포인트, 배팅 정보(result 값에 따라 배팅 참여 가능인지))
 		return null;
 	}
 
