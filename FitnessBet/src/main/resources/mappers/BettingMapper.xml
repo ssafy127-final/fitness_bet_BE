@@ -6,15 +6,20 @@
 <mapper namespace="com.fitnessbet.betting.model.dao.BettingDao">
 	<resultMap type="Betting" id="BettingWithChallengerInfo" autoMapping="true">
 		<id property="id" column="id"/>
-		<association property="User" javaType="Betting">
-			<id property="id" column="id"/>
-			<result property="campus" column="campus"/>
-			<result property="classNum" column="class_num"/>
+		<association property="user" javaType="User" autoMapping="true">
+			<id property="id" column="userid"/>
+		</association>
+	</resultMap>
+	
+	<resultMap type="BettingHistory" id="BettingHistoryWithBettingInfo" autoMapping="true">
+		<id property="id" column="id"/>
+		<association property="betting" javaType="Betting" autoMapping="true">
+			<id property="id" column="betid"/>
 		</association>
 	</resultMap>
 
 	<select id="selectAll" resultMap="BettingWithChallengerInfo" parameterType="Betting">
-		SELECT B.id, B.challenger, B.mission_id, B.mission_cnt, B.success_cnt, B.fail_cnt, B.success_point, B.fail_point, B.result, B.reg_date, U.id, U.campus, U.class_num
+		SELECT B.id, B.challenger, B.mission_id, B.mission_cnt, B.success_cnt, B.fail_cnt, B.success_point, B.fail_point, B.result, B.reg_date, U.id userid, U.campus, U.class_num
 		  FROM BETTING B
 		 INNER JOIN USER U
 		    ON B.challenger = U.id
@@ -62,6 +67,22 @@
 	
 	<select id="selectWinner" parameterType="Betting" resultType="BettingHistory">
 		SELECT * FROM BETTING_HISTORY WHERE betting_id = #{id} AND choice = #{result}
+	</select>
+	
+	<select id="selectBettingHistoryByUserId" parameterType="String" resultMap="BettingHistoryWithBettingInfo">
+		SELECT bh.id, bh.player, bh.bettingId, bh.point, bh.choice, b.id betid, b.challenger, b.missionId, b.missionCnt, b.successCnt, b.failCnt, b.successPoint, b.failPoint, b.result, b.regDate
+		  FROM BETTING_HISTORY bh
+		 INNER JOIN BETTING b
+		    ON b.id = bh.betting_id
+		 WHERE bh.player = #{id}
+	</select>
+	
+	<select id="selectChallengerBettingHistory" parameterType="String" resultMap="BettingHistoryWithBettingInfo">
+		SELECT bh.id, bh.player, bh.bettingId, bh.point, bh.choice, b.id betid, b.challenger, b.missionId, b.missionCnt, b.successCnt, b.failCnt, b.successPoint, b.failPoint, b.result, b.regDate
+		  FROM BETTING_HISTORY bh
+		 INNER JOIN BETTING b
+		    ON b.id = bh.betting_id
+		 WHERE b.challenger = #{id}
 	</select>
 	
 </mapper>

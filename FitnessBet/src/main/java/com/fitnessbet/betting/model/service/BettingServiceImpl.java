@@ -123,4 +123,14 @@ public class BettingServiceImpl implements BettingService {
 		return info;
 	}
 
+	@Override
+	public List<BettingHistory> getBettingHistory(String id) {
+		return dao.selectBettingHistoryByUserId(id);
+	}
+
+	@Override
+	public List<BettingHistory> getChallengerBettingHistory(String id) {
+		return dao.selectChallengerBettingHistory(id);
+	}
+
 }

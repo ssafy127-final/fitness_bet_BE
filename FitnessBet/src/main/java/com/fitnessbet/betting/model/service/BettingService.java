@@ -21,4 +21,8 @@ public interface BettingService {
 
 	Map<String, Object> getBettingAndUSerInfo(int id, User user);
 
+	List<BettingHistory> getBettingHistory(String id);
+
+	List<BettingHistory> getChallengerBettingHistory(String id);
+
 }

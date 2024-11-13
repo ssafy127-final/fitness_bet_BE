@@ -14,17 +14,17 @@ public class Betting {
 	private int result;
 	private String regDate;
 	
+	private User user; // challenger에 해당하는 정보 조인해서 넣을 것(반, 기수 등등,,)
 	
+
 
 	public int getMissionCnt() {
 		return missionCnt;
 	}
-
+	
 	public void setMissionCnt(int missionCnt) {
 		this.missionCnt = missionCnt;
 	}
-
-	private User user; // challenger에 해당하는 정보 조인해서 넣을 것(반, 기수 등등,,)
 
 	public int getId() {
 		return id;
