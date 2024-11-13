@@ -11,22 +11,24 @@ import com.fitnessbet.betting.model.dto.Betting;
 import com.fitnessbet.betting.model.dto.BettingHistory;
 import com.fitnessbet.mission.model.dao.MissionDao;
 import com.fitnessbet.mission.model.dto.Mission;
+import com.fitnessbet.mission.model.service.MissionService;
 import com.fitnessbet.user.model.dao.UserDao;
 import com.fitnessbet.user.model.dto.User;
+import com.fitnessbet.user.model.service.UserService;
 
 @Service
 public class BettingServiceImpl implements BettingService {
 
-	private final BettingDao betDao;
+	private final BettingDao dao;
 
 	@Autowired
-	private MissionDao missionDao;
+	private MissionService missionService;
 
 	@Autowired
-	private UserDao userDao;
+	private UserService userService;
 
 	public BettingServiceImpl(BettingDao dao) {
-		this.betDao = dao;
+		this.dao = dao;
 	}
 
 	@Override
@@ -41,25 +43,17 @@ public class BettingServiceImpl implements BettingService {
 		} else {
 			betting.setResult(1);
 		}
-		return betDao.selectAll(betting);
+		return dao.selectAll(betting);
 	}
 
 	@Override
 	@Transactional
 	public boolean createBetting(User user) {
 		Betting newBetting = new Betting();
-		// 미션 몇개인지 가져오기
-//		int cnt = missionDao.getMissionCnt();
-//		// 랜덤 돌리기 => 나온 숫자로 리밋 걸어서 해당 번호꺼 종목이랑 범위 가져오기
-//		int newBettingMissionNum = (int) (Math.random() * cnt);
-//		Mission mission = missionDao.getMission(newBettingMissionNum);
-		// service에서 가져오기
-		
-		
-		// 사람 랜덤돌리기
-//		user.setRandomNum((int) (Math.random() * userDao.getPeopleCnt(user)));
-//		User challenger = userDao.selectChallenger(user);
-		// service에서 가져오기
+
+		Mission mission = missionService.getMissionByIndex();
+
+		User challenger = userService.selectChallenger(user);
 		newBetting.setChallenger(challenger.getId());
 
 		// 성별 따라 범위에서 랜덤돌리기
@@ -71,20 +65,28 @@ public class BettingServiceImpl implements BettingService {
 					(int) ((mission.getMaleMax() - mission.getMaleMin() + 1) * Math.random()) + mission.getMaleMin());
 		}
 		// betting에 인서트
-		return betDao.insertBetting(newBetting) > 0;
+		return dao.insertBetting(newBetting) > 0;
 	}
 
 	@Override
 	@Transactional
 	public boolean finishBetting(Betting betting) {
-		return betDao.finishBetting(betting) > 0;
+		if (dao.finishBetting(betting) > 0) {
+			List<BettingHistory> winUsers = dao.selectWinner(betting);
+			// 포인트 정산
+			int totalPoint = betting.getFailPoint() + betting.getSuccessPoint();
+			for(BettingHistory info:winUsers) {
+				userService.addPoint(info.getPlayer(), Math.ceil(totalPoint/info.getPoint()));
+			}
+		}
+		return false;
 	}
 
 	@Override
 	@Transactional
 	public boolean joinBetting(BettingHistory bettingInfo) {
-		if (betDao.addBetHistory(bettingInfo) > 0) {
-			Betting betting = betDao.selectOneBettingById(bettingInfo.getBettingId());
+		if (dao.addBetHistory(bettingInfo) > 0) {
+			Betting betting = dao.selectOneBettingById(bettingInfo.getBettingId());
 			if (bettingInfo.getChoice() == 1) { // 성공선택
 				betting.setSuccessCnt(betting.getSuccessCnt() + 1);
 				betting.setSuccessPoint(betting.getSuccessPoint() + bettingInfo.getPoint());
@@ -92,9 +94,15 @@ public class BettingServiceImpl implements BettingService {
 				betting.setFailCnt(betting.getFailCnt() + 1);
 				betting.setFailPoint(betting.getFailPoint() + bettingInfo.getPoint());
 			}
-			return betDao.joinBetting(betting) > 0;
+			return dao.joinBetting(betting) > 0;
 		}
 		return false;
+	}
+
+	@Override
+	@Transactional
+	public boolean stopBetting(int id) {
+		return dao.changeBettingStatusDone(id) > 0;
 	}
 
 }
