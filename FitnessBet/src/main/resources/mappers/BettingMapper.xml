@@ -26,7 +26,7 @@
 		 WHERE U.campus = #{user.campus}
 		   AND U.class_num = #{user.classNum}
 		   <if test="result == 0">
-		   AND (B.result IS NULL OR B.result = 0)
+		   AND (B.result = 0 OR B.result = 2)
 		   </if>
 		   <if test="result != 0">
 		   AND (B.result = 1 OR B.result = -1)
@@ -61,7 +61,7 @@
 	
 	<update id="changeBettingStatusDone" parameterType="int">
 		UPDATE BETTING
-		   SET result = 0
+		   SET result = 2
 		 WHERE id = #{id}
 	</update>
 	
@@ -70,19 +70,17 @@
 	</select>
 	
 	<select id="selectBettingHistoryByUserId" parameterType="String" resultMap="BettingHistoryWithBettingInfo">
-		SELECT bh.id, bh.player, bh.bettingId, bh.point, bh.choice, b.id betid, b.challenger, b.missionId, b.missionCnt, b.successCnt, b.failCnt, b.successPoint, b.failPoint, b.result, b.regDate
+		SELECT bh.id, bh.player, bh.betting_id, bh.point, bh.choice, b.id betid, b.challenger, b.mission_id, b.mission_cnt, b.success_cnt, b.fail_cnt, b.success_point, b.fail_point, b.result, b.reg_date
 		  FROM BETTING_HISTORY bh
 		 INNER JOIN BETTING b
 		    ON b.id = bh.betting_id
 		 WHERE bh.player = #{id}
 	</select>
 	
-	<select id="selectChallengerBettingHistory" parameterType="String" resultMap="BettingHistoryWithBettingInfo">
-		SELECT bh.id, bh.player, bh.bettingId, bh.point, bh.choice, b.id betid, b.challenger, b.missionId, b.missionCnt, b.successCnt, b.failCnt, b.successPoint, b.failPoint, b.result, b.regDate
-		  FROM BETTING_HISTORY bh
-		 INNER JOIN BETTING b
-		    ON b.id = bh.betting_id
-		 WHERE b.challenger = #{id}
+	<select id="selectChallengerBettingHistory" parameterType="String" resultType="Betting">
+		SELECT *
+		  FROM BETTING
+		 WHERE challenger = #{id}
 	</select>
 	
 </mapper>
