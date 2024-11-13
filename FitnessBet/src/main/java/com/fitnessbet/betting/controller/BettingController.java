@@ -97,7 +97,7 @@ public class BettingController {
 	}
 	
 	// 챌린저로 참여 목록 조회
-	@GetMapping("/history/join")
+	@GetMapping("/history/challenger")
 	public ResponseEntity<?> getBettingListByChallengerId(@RequestParam String id){
 		List<BettingHistory> list = service.getChallengerBettingHistory(id);
 		
