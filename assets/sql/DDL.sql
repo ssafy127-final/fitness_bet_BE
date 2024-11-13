@@ -3,20 +3,23 @@ CREATE DATABASE fitnessbet;
 USE fitnessbet;
 
 DROP TABLE IF EXISTS `USER`;
-CREATE TABLE `USER` (
-	`id`	VARCHAR(15)	NOT NULL,
-	`pw`	VARCHAR(100)	NOT NULL,
-	`name`	VARCHAR(50)	NOT NULL,
-	`campus`	VARCHAR(20)	NOT NULL,
-	`class_num`	int	NOT NULL,
-	`current_point`	int	NOT NULL	DEFAULT 0,
-	`total_point`	int	NOT NULL	DEFAULT 0,
-	`visited`	date	NULL	COMMENT '저장되어 있는 데이터가 현재 날짜 이전이면 출석 전 (CURDATE())사용',
-	`gender`	boolean	NOT NULL	COMMENT '여성 T / 남 F',
-	`admin`	boolean	NOT NULL	DEFAULT false,
-	`accept`	boolean	NOT NULL	DEFAULT false,
-	`phone`	VARCHAR(20)	NOT NULL
-);
+
+CREATE TABLE `user` (
+   `id` varchar(15) NOT NULL,
+   `pw` varchar(100) NOT NULL,
+   `name` varchar(50) NOT NULL,
+   `campus` varchar(20) NOT NULL,
+   `class_num` int NOT NULL,
+   `current_point` int NOT NULL DEFAULT '0',
+   `total_point` int NOT NULL DEFAULT '0',
+   `visited` date DEFAULT NULL COMMENT '저장되어 있는 데이터가 현재 날짜 이전이면 출석 전 (CURDATE())사용',
+   `gender` tinyint(1) NOT NULL COMMENT '여성 T / 남 F',
+   `admin` tinyint(1) NOT NULL DEFAULT '0',
+   `accept` tinyint(1) NOT NULL DEFAULT '0',
+   `phone` varchar(20) NOT NULL,
+   `random_num` int DEFAULT NULL,
+   PRIMARY KEY (`id`)
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DROP TABLE IF EXISTS `REVIEW`;
 
@@ -87,10 +90,6 @@ CREATE TABLE `PRODUCT_HISTORY` (
 	`product`	int	NOT NULL	COMMENT 'product 테이블 id 참조',
 	`date`	date	NOT NULL,
 	`point`	int	NOT NULL
-);
-
-ALTER TABLE `USER` ADD CONSTRAINT `PK_USER` PRIMARY KEY (
-	`id`
 );
 
 ALTER TABLE `REVIEW` ADD CONSTRAINT `PK_REVIEW` PRIMARY KEY (
@@ -179,4 +178,3 @@ ALTER TABLE `PRODUCT_HISTORY` ADD CONSTRAINT `FK_PRODUCT_TO_PRODUCT_HISTORY_1` F
 REFERENCES `PRODUCT` (
 	`id`
 );
-
