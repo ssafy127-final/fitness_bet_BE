@@ -52,9 +52,13 @@ public class BettingServiceImpl implements BettingService {
 		Betting newBetting = new Betting();
 
 		Mission mission = missionService.getMissionByIndex();
+		
+		System.out.println(mission.toString());
 
 		User challenger = userService.selectChallenger(user);
 		newBetting.setChallenger(challenger.getId());
+		System.out.println("#########" + challenger.toString());
+		newBetting.setMissionId(mission.getId());
 
 		// 성별 따라 범위에서 랜덤돌리기
 		if (challenger.getGender() == 0) {

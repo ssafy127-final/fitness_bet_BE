@@ -26,10 +26,10 @@
 		 WHERE U.campus = #{user.campus}
 		   AND U.class_num = #{user.classNum}
 		   <if test="result == 0">
-		   AND B.result = 0
+		   AND (B.result IS NULL OR B.result = 0)
 		   </if>
 		   <if test="result != 0">
-		   AND B.result != 0
+		   AND (B.result = 1 OR B.result = -1)
 		   </if>
 	</select>
 	

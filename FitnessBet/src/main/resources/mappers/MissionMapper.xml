@@ -41,7 +41,8 @@
 	
 	<!-- 존재하는 미션 중 randomNum 번째 index에 있는 미션 반환 -->
 	<select id = "selectMissionByIndex" parameterType="int" resultType="Mission">
-		SELECT * FROM mission
+		SELECT id , content, min_m as maleMin, max_m as maleMax, min_w as femaleMin, max_w as femaleMax
+		FROM mission
 		LIMIT 1 OFFSET #{randomNum};
 	</select>
 	

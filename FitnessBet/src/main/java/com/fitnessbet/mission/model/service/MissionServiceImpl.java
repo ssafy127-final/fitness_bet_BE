@@ -63,6 +63,7 @@ public class MissionServiceImpl implements MissionService {
 	public Mission getMissionByIndex(){
 	    int cnt = missionDao.countAll();
 	    int newBettingMissionNum = (int) (Math.random() * cnt);
+	    System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + newBettingMissionNum);
 	    return  missionDao.selectMissionByIndex(newBettingMissionNum);
 	}
 
