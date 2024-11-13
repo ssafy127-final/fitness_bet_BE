@@ -23,7 +23,7 @@ CREATE TABLE `user` (
 DROP TABLE IF EXISTS `REVIEW`;
 
 CREATE TABLE `REVIEW` (
-	`id`	int	NOT NULL	COMMENT 'auto_increment',
+	`id`	int	NOT NULL auto_increment,
 	`writer`	VARCHAR(15)	NOT NULL	COMMENT 'USER 테이블의 id컬럼 참조',
 	`content`	VARCHAR(500)	NOT NULL,
 	`reg_date`	date	NOT NULL,
@@ -31,13 +31,14 @@ CREATE TABLE `REVIEW` (
 	`like_cnt`	int	NOT NULL	DEFAULT 0,
 	`del_yn`	boolean	NOT NULL	DEFAULT false	COMMENT '삭제 여부 확인',
 	`parent_review_id`	int	NULL	COMMENT 'REVIEW 테이블의 id 컬럼 참조',
-	`betting_id`	int	NOT NULL	COMMENT 'auto_increment'
+	`betting_id`	int	NOT NULL,
+    PRIMARY KEY (`id`)
 );
 
 DROP TABLE IF EXISTS `BETTING`;
 
 CREATE TABLE `BETTING` (
-	`id`	int	NOT NULL	COMMENT 'auto_increment',
+	`id`	int	NOT NULL auto_increment,
 	`challenger`	VARCHAR(15)	NOT NULL,
 	`mission_id`	int	NOT NULL	COMMENT 'auto_increment',
     `mission_cnt` int	NOT NULL,
@@ -46,74 +47,56 @@ CREATE TABLE `BETTING` (
 	`success_point`	int	NOT NULL	DEFAULT 0,
 	`fail_point`	int	NOT NULL	DEFAULT 0,
 	`result`	int	,
-	`reg_date`	date	NOT NULL
+	`reg_date`	date	NOT NULL,
+    PRIMARY KEY (`id`)
 );
 
 DROP TABLE IF EXISTS `MISSION`;
 
 CREATE TABLE `MISSION` (
-	`id`	int	NOT NULL	COMMENT 'auto_increment',
+	`id`	int	NOT NULL auto_increment,
 	`content`	VARCHAR(100)	NOT NULL,
 	`min_m`	int	NOT NULL,
 	`max_m`	int	NOT NULL,
 	`min_w`	int	NOT NULL,
-	`max_w`	int	NOT NULL
+	`max_w`	int	NOT NULL,
+    PRIMARY KEY (`id`)
 );
 
 DROP TABLE IF EXISTS `BETTING_HISTORY`;
 
 CREATE TABLE `BETTING_HISTORY` (
-	`id`	int	NOT NULL	COMMENT 'auto_increment',
+	`id`	int	NOT NULL auto_increment,
 	`betting_id`	int	NOT NULL	COMMENT 'betting 테이블 id 참조',
 	`player`	VARCHAR(15)	NOT NULL	COMMENT 'user테이블 id 참조',
 	`point`	int	NOT NULL,
-	`choice`	int	NOT NULL
+	`choice`	int	NOT NULL,
+    PRIMARY KEY (`id`)
 );
 
 DROP TABLE IF EXISTS `PRODUCT`;
 
 CREATE TABLE `PRODUCT` (
-	`id`	int	NOT NULL	COMMENT 'auto_increment',
+	`id`	int	NOT NULL auto_increment,
 	`name`	VARCHAR(100)	NOT NULL,
 	`price`	int	NOT NULL,
 	`img`	VARCHAR(2000)	NULL,
 	`del_yn`	boolean	NOT NULL	DEFAULT false,
-	`point`	int	NOT NULL
+	`point`	int	NOT NULL,
+    PRIMARY KEY (`id`)
 );
 
 DROP TABLE IF EXISTS `PRODUCT_HISTORY`;
 
 CREATE TABLE `PRODUCT_HISTORY` (
-	`id`	int	NOT NULL	COMMENT 'auto_increment',
+	`id`	int	NOT NULL auto_increment,
 	`user`	VARCHAR(15)	NOT NULL	COMMENT 'user테이블의 id참조',
 	`product`	int	NOT NULL	COMMENT 'product 테이블 id 참조',
 	`date`	date	NOT NULL,
-	`point`	int	NOT NULL
+	`point`	int	NOT NULL,
+    PRIMARY KEY (`id`)
 );
 
-ALTER TABLE `REVIEW` ADD CONSTRAINT `PK_REVIEW` PRIMARY KEY (
-	`id`
-);
-
-ALTER TABLE `BETTING` ADD CONSTRAINT `PK_BETTING` PRIMARY KEY (
-	`id`
-);
-
-ALTER TABLE `MISSION` ADD CONSTRAINT `PK_MISSION` PRIMARY KEY (
-	`id`
-);
-
-ALTER TABLE `BETTING_HISTORY` ADD CONSTRAINT `PK_BETTING_HISTORY` PRIMARY KEY (
-	`id`
-);
-
-ALTER TABLE `PRODUCT` ADD CONSTRAINT `PK_PRODUCT` PRIMARY KEY (
-	`id`
-);
-
-ALTER TABLE `PRODUCT_HISTORY` ADD CONSTRAINT `PK_PRODUCT_HISTORY` PRIMARY KEY (
-	`id`
-);
 
 ALTER TABLE `REVIEW` ADD CONSTRAINT `FK_USER_TO_REVIEW_1` FOREIGN KEY (
 	`writer`
