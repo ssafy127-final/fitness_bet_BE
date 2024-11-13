@@ -46,7 +46,7 @@ CREATE TABLE `BETTING` (
 	`fail_cnt`	int	NOT NULL	DEFAULT 0	COMMENT '미션 실패 배팅 수',
 	`success_point`	int	NOT NULL	DEFAULT 0,
 	`fail_point`	int	NOT NULL	DEFAULT 0,
-	`result`	int	,
+	`result`	int	DEFAULT 0,
 	`reg_date`	date	NOT NULL,
     PRIMARY KEY (`id`)
 );

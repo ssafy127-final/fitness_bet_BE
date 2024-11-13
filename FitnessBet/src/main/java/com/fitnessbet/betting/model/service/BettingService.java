@@ -19,10 +19,10 @@ public interface BettingService {
 
 	boolean stopBetting(int id);
 
-	Map<String, Object> getBettingAndUSerInfo(int id, User user);
+	Map<String, Object> getBettingAndUSerInfo(int id, String userId);
 
 	List<BettingHistory> getBettingHistory(String id);
 
-	List<BettingHistory> getChallengerBettingHistory(String id);
+	List<Betting> getChallengerBettingHistory(String id);
 
 }

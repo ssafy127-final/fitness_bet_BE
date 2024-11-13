@@ -53,11 +53,9 @@ public class BettingServiceImpl implements BettingService {
 
 		Mission mission = missionService.getMissionByIndex();
 		
-		System.out.println(mission.toString());
 
 		User challenger = userService.selectChallenger(user);
 		newBetting.setChallenger(challenger.getId());
-		System.out.println("#########" + challenger.toString());
 		newBetting.setMissionId(mission.getId());
 
 		// 성별 따라 범위에서 랜덤돌리기
@@ -81,8 +79,12 @@ public class BettingServiceImpl implements BettingService {
 			int totalPoint = betting.getFailPoint() + betting.getSuccessPoint();
 			int successCnt = 0;
 			for (BettingHistory info : winUsers) {
-				successCnt += userService.calculateReward(info.getPlayer(),
-						(int) Math.ceil(totalPoint / info.getPoint()));
+				if(betting.getResult()==1) {
+					totalPoint = (int) Math.ceil(totalPoint / (betting.getSuccessPoint()/info.getPoint()));
+				}else {
+					totalPoint = (int) Math.ceil(totalPoint / (betting.getFailPoint()/info.getPoint()));
+				}
+				successCnt += userService.calculateReward(info.getPlayer(),totalPoint);
 			}
 			if (successCnt == winUsers.size())
 				return true;
@@ -118,10 +120,10 @@ public class BettingServiceImpl implements BettingService {
 	}
 
 	@Override
-	public Map<String, Object> getBettingAndUSerInfo(int id, User user) {
+	public Map<String, Object> getBettingAndUSerInfo(int id, String userId) {
 		Map<String, Object> info = new HashMap<>();
 		Betting bet = dao.selectOneBettingById(id);
-		User userInfo = userService.getUserById(user.getId());
+		User userInfo = userService.getUserById(userId);
 		info.put("bettingInfo", bet);
 		info.put("userInfo", userInfo);
 		return info;
@@ -133,7 +135,7 @@ public class BettingServiceImpl implements BettingService {
 	}
 
 	@Override
-	public List<BettingHistory> getChallengerBettingHistory(String id) {
+	public List<Betting> getChallengerBettingHistory(String id) {
 		return dao.selectChallengerBettingHistory(id);
 	}
 
