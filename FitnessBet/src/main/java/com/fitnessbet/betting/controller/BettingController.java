@@ -77,11 +77,34 @@ public class BettingController {
 		return new ResponseEntity<>("참여 실패", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
+	// 배팅 상세 내용
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getBettingAndUserInfo(@PathVariable int id, @RequestBody User user){
 		// bettingInfo, userInfo에 각각 배팅정보, 유저정보 담겨있음
 		Map<String, Object> info = service.getBettingAndUSerInfo(id, user);
 		return new ResponseEntity<Map<String, Object>>(info, HttpStatus.OK);
+	}
+	
+	// 참여 배팅 목록 조회
+	@GetMapping("/history/join")
+	public ResponseEntity<?> getBettingListByUserId(@RequestParam String id){
+		List<BettingHistory> list = service.getBettingHistory(id);
+		
+		if (list != null && list.size() != 0) {
+			return new ResponseEntity<List<BettingHistory>>(list, HttpStatus.OK);
+		}
+		return new ResponseEntity<String>("정보 없음", HttpStatus.NO_CONTENT);
+	}
+	
+	// 챌린저로 참여 목록 조회
+	@GetMapping("/history/join")
+	public ResponseEntity<?> getBettingListByChallengerId(@RequestParam String id){
+		List<BettingHistory> list = service.getChallengerBettingHistory(id);
+		
+		if (list != null && list.size() != 0) {
+			return new ResponseEntity<List<BettingHistory>>(list, HttpStatus.OK);
+		}
+		return new ResponseEntity<String>("정보 없음", HttpStatus.NO_CONTENT);
 	}
 
 }

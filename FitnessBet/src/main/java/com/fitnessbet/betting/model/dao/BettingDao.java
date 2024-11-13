@@ -23,4 +23,8 @@ public interface BettingDao {
 
 	List<BettingHistory> selectWinner(Betting betting);
 
+	List<BettingHistory> selectBettingHistoryByUserId(String id);
+
+	List<BettingHistory> selectChallengerBettingHistory(String id);
+
 }

@@ -8,7 +8,15 @@ public class BettingHistory {
 	private int point;
 	private int choice;
 	
+	private Betting betting;
 	
+	
+	public Betting getBetting() {
+		return betting;
+	}
+	public void setBetting(Betting betting) {
+		this.betting = betting;
+	}
 	public int getId() {
 		return id;
 	}
