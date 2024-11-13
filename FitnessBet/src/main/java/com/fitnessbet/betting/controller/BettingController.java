@@ -1,6 +1,7 @@
 package com.fitnessbet.betting.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -61,9 +62,9 @@ public class BettingController {
 	@PutMapping("/{id}/finish")
 	public ResponseEntity<String> finishBetting(@RequestBody Betting betting){
 		if(service.finishBetting(betting)) {
-			return new ResponseEntity<>("종료 완료", HttpStatus.OK);
+			return new ResponseEntity<>("결과 입력 완료", HttpStatus.OK);
 		}
-		return new ResponseEntity<>("종료 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>("결과 입력 실패", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	// 참여자(joinPerson), 배팅 얼마했는지, 어느쪽에 했는지를 Betting 객체에 담아 전달하기(result, fail/success point)
@@ -71,15 +72,16 @@ public class BettingController {
 	public ResponseEntity<String> joinBetting(@PathVariable("id") int id, @RequestBody BettingHistory bettingInfo){
 		bettingInfo.setBettingId(id);
 		if(service.joinBetting(bettingInfo)) {
-			return new ResponseEntity<>("종료 완료", HttpStatus.OK);
+			return new ResponseEntity<>("참여 완료", HttpStatus.OK);
 		}
-		return new ResponseEntity<>("종료 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>("참여 실패", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<?> getBettingAndUserInfo(){
-		// 유저가 배팅 상세 눌렀을 때 나오는 정보 리턴하기(배팅 가능한 포인트, 배팅 정보(result 값에 따라 배팅 참여 가능인지))
-		return null;
+	public ResponseEntity<?> getBettingAndUserInfo(@PathVariable int id, @RequestBody User user){
+		// bettingInfo, userInfo에 각각 배팅정보, 유저정보 담겨있음
+		Map<String, Object> info = service.getBettingAndUSerInfo(id, user);
+		return new ResponseEntity<Map<String, Object>>(info, HttpStatus.OK);
 	}
 
 }

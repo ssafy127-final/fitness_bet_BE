@@ -1,6 +1,8 @@
 package com.fitnessbet.betting.model.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,10 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fitnessbet.betting.model.dao.BettingDao;
 import com.fitnessbet.betting.model.dto.Betting;
 import com.fitnessbet.betting.model.dto.BettingHistory;
-import com.fitnessbet.mission.model.dao.MissionDao;
 import com.fitnessbet.mission.model.dto.Mission;
 import com.fitnessbet.mission.model.service.MissionService;
-import com.fitnessbet.user.model.dao.UserDao;
 import com.fitnessbet.user.model.dto.User;
 import com.fitnessbet.user.model.service.UserService;
 
@@ -75,9 +75,13 @@ public class BettingServiceImpl implements BettingService {
 			List<BettingHistory> winUsers = dao.selectWinner(betting);
 			// 포인트 정산
 			int totalPoint = betting.getFailPoint() + betting.getSuccessPoint();
-			for(BettingHistory info:winUsers) {
-				userService.addPoint(info.getPlayer(), Math.ceil(totalPoint/info.getPoint()));
+			int successCnt = 0;
+			for (BettingHistory info : winUsers) {
+				successCnt += userService.calculateReward(info.getPlayer(),
+						(int) Math.ceil(totalPoint / info.getPoint()));
 			}
+			if (successCnt == winUsers.size())
+				return true;
 		}
 		return false;
 	}
@@ -85,16 +89,20 @@ public class BettingServiceImpl implements BettingService {
 	@Override
 	@Transactional
 	public boolean joinBetting(BettingHistory bettingInfo) {
-		if (dao.addBetHistory(bettingInfo) > 0) {
-			Betting betting = dao.selectOneBettingById(bettingInfo.getBettingId());
-			if (bettingInfo.getChoice() == 1) { // 성공선택
-				betting.setSuccessCnt(betting.getSuccessCnt() + 1);
-				betting.setSuccessPoint(betting.getSuccessPoint() + bettingInfo.getPoint());
-			} else {
-				betting.setFailCnt(betting.getFailCnt() + 1);
-				betting.setFailPoint(betting.getFailPoint() + bettingInfo.getPoint());
+		// 참여 유저 포인트 감소시키기
+		if (userService.minusBetPoint(bettingInfo.getPlayer(), bettingInfo.getPoint()) > 0) {
+			
+			if (dao.addBetHistory(bettingInfo) > 0) {
+				Betting betting = dao.selectOneBettingById(bettingInfo.getBettingId());
+				if (bettingInfo.getChoice() == 1) { // 성공선택
+					betting.setSuccessCnt(betting.getSuccessCnt() + 1);
+					betting.setSuccessPoint(betting.getSuccessPoint() + bettingInfo.getPoint());
+				} else {
+					betting.setFailCnt(betting.getFailCnt() + 1);
+					betting.setFailPoint(betting.getFailPoint() + bettingInfo.getPoint());
+				}
+				return dao.joinBetting(betting) > 0;
 			}
-			return dao.joinBetting(betting) > 0;
 		}
 		return false;
 	}
@@ -103,6 +111,16 @@ public class BettingServiceImpl implements BettingService {
 	@Transactional
 	public boolean stopBetting(int id) {
 		return dao.changeBettingStatusDone(id) > 0;
+	}
+
+	@Override
+	public Map<String, Object> getBettingAndUSerInfo(int id, User user) {
+		Map<String, Object> info = new HashMap<>();
+		Betting bet = dao.selectOneBettingById(id);
+		User userInfo = userService.getUserById(user.getId());
+		info.put("bettingInfo", bet);
+		info.put("userInfo", userInfo);
+		return info;
 	}
 
 }

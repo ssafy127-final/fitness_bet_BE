@@ -1,6 +1,7 @@
 package com.fitnessbet.betting.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.fitnessbet.betting.model.dto.Betting;
 import com.fitnessbet.betting.model.dto.BettingHistory;
@@ -17,5 +18,7 @@ public interface BettingService {
 	boolean joinBetting(BettingHistory bettingInfo);
 
 	boolean stopBetting(int id);
+
+	Map<String, Object> getBettingAndUSerInfo(int id, User user);
 
 }
