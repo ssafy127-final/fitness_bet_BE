@@ -10,6 +10,8 @@ public interface UserService {
 	
 	public User authenticate(String id, String pw);
 	
+	public User getUserById(String id);
+	
 	public boolean rejectUser(String id);
 	
 	public List<User> getList(User user);

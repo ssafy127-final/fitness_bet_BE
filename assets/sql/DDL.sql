@@ -17,7 +17,6 @@ CREATE TABLE `user` (
    `admin` tinyint(1) NOT NULL DEFAULT '0',
    `accept` tinyint(1) NOT NULL DEFAULT '0',
    `phone` varchar(20) NOT NULL,
-   `random_num` int DEFAULT NULL,
    PRIMARY KEY (`id`)
  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
