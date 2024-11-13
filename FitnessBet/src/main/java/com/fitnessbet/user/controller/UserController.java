@@ -62,6 +62,7 @@ public class UserController {
 		User user = userService.authenticate(loginRequestInfo.getId(), loginRequestInfo.getPw());
 		if (user != null) {
 			if (user.getAccept() == APPROVED) { // 0 은 가입 대기중 / 1은 가입 승인 완료
+				newSession.setAttribute("userId", user.getId());
 				newSession.setAttribute("userName", user.getName());
 				newSession.setAttribute("isAdmin", user.getAdmin()); // 관리자인지 아닌지 세션에 저장
 				newSession.setAttribute("campus", user.getCampus());
