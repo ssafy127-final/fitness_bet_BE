@@ -1,5 +1,7 @@
 package com.fitnessbet.betting.model.dto;
 
+import java.util.List;
+
 import com.fitnessbet.user.model.dto.User;
 
 public class Betting {
@@ -16,7 +18,16 @@ public class Betting {
 	
 	private User user; // challenger에 해당하는 정보 조인해서 넣을 것(반, 기수 등등,,)
 	
+	private List<Review> reviews; 
+	
 
+	public List<Review> getReviews() {
+		return reviews;
+	}
+
+	public void setReviews(List<Review> reviews) {
+		this.reviews = reviews;
+	}
 
 	public int getMissionCnt() {
 		return missionCnt;

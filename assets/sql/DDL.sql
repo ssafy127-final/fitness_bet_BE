@@ -28,9 +28,6 @@ CREATE TABLE `REVIEW` (
 	`content`	VARCHAR(500)	NOT NULL,
 	`reg_date`	date	NOT NULL,
 	`mod_date`	date	NULL,
-	`like_cnt`	int	NOT NULL	DEFAULT 0,
-	`del_yn`	boolean	NOT NULL	DEFAULT false	COMMENT '삭제 여부 확인',
-	`parent_review_id`	int	NULL	COMMENT 'REVIEW 테이블의 id 컬럼 참조',
 	`betting_id`	int	NOT NULL,
     PRIMARY KEY (`id`)
 );
@@ -105,12 +102,7 @@ REFERENCES `USER` (
 	`id`
 );
 
-ALTER TABLE `REVIEW` ADD CONSTRAINT `FK_REVIEW_TO_REVIEW_1` FOREIGN KEY (
-	`parent_review_id`
-)
-REFERENCES `REVIEW` (
-	`id`
-);
+
 
 ALTER TABLE `REVIEW` ADD CONSTRAINT `FK_BETTING_TO_REVIEW_1` FOREIGN KEY (
 	`betting_id`
