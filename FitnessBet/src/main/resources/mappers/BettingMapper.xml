@@ -17,6 +17,15 @@
 			<id property="id" column="betid"/>
 		</association>
 	</resultMap>
+	
+	<resultMap type="Betting" id="BettingWithReview" autoMapping="true">
+		<id property="id" column="id"/>
+		<collection property="reviews" resultMap="reviewMap" autoMapping="true"></collection>
+	</resultMap>
+	<resultMap type="Review" id="reviewMap" autoMapping="true">
+		<id property="id" column="reviewid"/>
+		<result property="regDate" column="reviewreg"/>
+	</resultMap>
 
 	<select id="selectAll" resultMap="BettingWithChallengerInfo" parameterType="Betting">
 		SELECT B.id, B.challenger, B.mission_id, B.mission_cnt, B.success_cnt, B.fail_cnt, B.success_point, B.fail_point, B.result, B.reg_date, U.id userid, U.campus, U.class_num
@@ -55,8 +64,12 @@
 		 WHERE id = #{id}
 	</update>
 	
-	<select id="selectOneBettingById" parameterType="int" resultType="Betting">
-		SELECT * FROM BETTING WHERE id = #{bettingId}
+	<select id="selectOneBettingById" parameterType="int" resultMap="BettingWithReview">
+		SELECT B.id, B.challenger, B.mission_id, B.mission_cnt, B.success_cnt, B.fail_cnt, B.success_point, B.fail_point, B.result, B.reg_date, R.id reviewid, R.writer, R.content, R.reg_date reviewreg, R.mod_date, R.betting_id 
+		  FROM BETTING B
+		 INNER JOIN REVIEW R
+		    ON B.id = R.betting_id
+		 WHERE B.id = #{bettingId}
 	</select>
 	
 	<update id="changeBettingStatusDone" parameterType="int">
@@ -82,5 +95,10 @@
 		  FROM BETTING
 		 WHERE challenger = #{id}
 	</select>
+	
+	<insert id="createReview" parameterType="Review">
+		INSERT INTO REVIEW (writer, content, reg_date, betting_id)
+		VALUES (#{writer}, #{content}, current_timestamp(), #{bettingId})
+	</insert>
 	
 </mapper>

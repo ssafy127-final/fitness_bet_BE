@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.fitnessbet.betting.model.dto.Betting;
 import com.fitnessbet.betting.model.dto.BettingHistory;
+import com.fitnessbet.betting.model.dto.Review;
 import com.fitnessbet.user.model.dto.User;
 
 public interface BettingService {
@@ -24,5 +25,7 @@ public interface BettingService {
 	List<BettingHistory> getBettingHistory(String id);
 
 	List<Betting> getChallengerBettingHistory(String id);
+
+	boolean createReview(Review review);
 
 }

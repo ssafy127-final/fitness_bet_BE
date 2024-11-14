@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fitnessbet.betting.model.dao.BettingDao;
 import com.fitnessbet.betting.model.dto.Betting;
 import com.fitnessbet.betting.model.dto.BettingHistory;
+import com.fitnessbet.betting.model.dto.Review;
 import com.fitnessbet.mission.model.dto.Mission;
 import com.fitnessbet.mission.model.service.MissionService;
 import com.fitnessbet.user.model.dto.User;
@@ -137,6 +138,11 @@ public class BettingServiceImpl implements BettingService {
 	@Override
 	public List<Betting> getChallengerBettingHistory(String id) {
 		return dao.selectChallengerBettingHistory(id);
+	}
+
+	@Override
+	public boolean createReview(Review review) {
+		return dao.createReview(review) > 0;
 	}
 
 }

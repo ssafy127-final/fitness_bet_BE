@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fitnessbet.betting.model.dto.Betting;
 import com.fitnessbet.betting.model.dto.BettingHistory;
+import com.fitnessbet.betting.model.dto.Review;
 
 public interface BettingDao {
 
@@ -26,5 +27,7 @@ public interface BettingDao {
 	List<BettingHistory> selectBettingHistoryByUserId(String id);
 
 	List<Betting> selectChallengerBettingHistory(String id);
+
+	int createReview(Review review);
 
 }
