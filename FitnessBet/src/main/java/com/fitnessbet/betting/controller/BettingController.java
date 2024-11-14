@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fitnessbet.betting.model.dto.Betting;
 import com.fitnessbet.betting.model.dto.BettingHistory;
+import com.fitnessbet.betting.model.dto.Review;
 import com.fitnessbet.betting.model.service.BettingService;
 import com.fitnessbet.user.model.dto.User;
 
@@ -85,6 +86,15 @@ public class BettingController {
 		return new ResponseEntity<Map<String, Object>>(info, HttpStatus.OK);
 	}
 	
+	@PostMapping("/{bettingId}/review")
+	public ResponseEntity<String> writeReview(@PathVariable int bettingId,@RequestBody Review review){
+		review.setBettingId(bettingId);
+		if(service.createReview(review)) {
+			return new ResponseEntity<>("작성 성공", HttpStatus.OK);
+		}
+		return new ResponseEntity<>("작성 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
 	// 참여 배팅 목록 조회
 	@GetMapping("/history/join") 
 	public ResponseEntity<?> getBettingListByUserId(@RequestParam String id){
@@ -106,5 +116,7 @@ public class BettingController {
 		}
 		return new ResponseEntity<String>("정보 없음", HttpStatus.NO_CONTENT);
 	}
+	
+	
 
 }
