@@ -28,4 +28,8 @@ public interface BettingService {
 
 	boolean createReview(Review review);
 
+	boolean removeReview(int reviewId);
+
+	boolean modifyReview(Review review);
+
 }

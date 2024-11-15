@@ -101,4 +101,15 @@
 		VALUES (#{writer}, #{content}, current_timestamp(), #{bettingId})
 	</insert>
 	
+	<delete id="deleteReview" parameterType="int">
+		DELETE FROM REVIEW
+		 WHERE id = #{id}
+	</delete>
+	
+	<update id="updateReview" parameterType="Review">
+		UPDATE REVIEW
+		   SET content = #{content}, mod_date = current_timestamp()
+		 WHERE id = #{id}
+	</update>
+	
 </mapper>

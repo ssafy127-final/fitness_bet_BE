@@ -30,4 +30,8 @@ public interface BettingDao {
 
 	int createReview(Review review);
 
+	int deleteReview(int reviewId);
+
+	int updateReview(Review review);
+
 }
