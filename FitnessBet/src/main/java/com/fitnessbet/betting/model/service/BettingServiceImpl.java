@@ -145,4 +145,14 @@ public class BettingServiceImpl implements BettingService {
 		return dao.createReview(review) > 0;
 	}
 
+	@Override
+	public boolean removeReview(int reviewId) {
+		return dao.deleteReview(reviewId) > 0;
+	}
+
+	@Override
+	public boolean modifyReview(Review review) {
+		return dao.updateReview(review) > 0;
+	}
+
 }

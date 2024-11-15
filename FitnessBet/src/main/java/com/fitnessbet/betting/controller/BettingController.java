@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -86,14 +87,32 @@ public class BettingController {
 		return new ResponseEntity<Map<String, Object>>(info, HttpStatus.OK);
 	}
 	
-	@PostMapping("/{bettingId}/review")
-	public ResponseEntity<String> writeReview(@PathVariable int bettingId,@RequestBody Review review){
-		review.setBettingId(bettingId);
+	// 배팅 코멘트 작성 
+	@PostMapping("/review")
+	public ResponseEntity<String> writeReview(@RequestBody Review review){
 		if(service.createReview(review)) {
 			return new ResponseEntity<>("작성 성공", HttpStatus.OK);
 		}
 		return new ResponseEntity<>("작성 실패", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+	
+	@PutMapping("/review")
+	public ResponseEntity<String> modifyReview(@RequestBody Review review){
+		if(service.modifyReview(review)) {
+			return new ResponseEntity<>("수정 성공", HttpStatus.OK);
+		}
+		return new ResponseEntity<>("수정 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	@DeleteMapping("/review")
+	public ResponseEntity<String> removeReview(@RequestParam int reviewId){
+		if(service.removeReview(reviewId)) {
+			return new ResponseEntity<>("삭제 성공", HttpStatus.OK);
+		}
+		return new ResponseEntity<>("삭제 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	
 	
 	// 참여 배팅 목록 조회
 	@GetMapping("/history/join") 
