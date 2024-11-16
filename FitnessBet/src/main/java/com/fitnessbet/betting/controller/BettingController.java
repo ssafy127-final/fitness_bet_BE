@@ -32,9 +32,9 @@ public class BettingController {
 	}
 
 	@GetMapping("") // 프론트에서 현재 로그인한사람 정보 넘겨줘야함(캠퍼스, 반)
-	public ResponseEntity<?> getAllList(@RequestParam("campus") String campus, @RequestParam("classNum") int classNum,
+	public ResponseEntity<?> getAllList(@RequestParam("userId") String userId,
 			@RequestParam(value = "status", defaultValue = "now") String status) {
-		List<Betting> list = service.getAllListByUserInfo(campus, classNum, status);
+		List<Betting> list = service.getAllListByUserInfo(userId, status);
 		if (list != null && list.size() != 0) {
 			return new ResponseEntity<List<Betting>>(list, HttpStatus.OK);
 		}
@@ -79,12 +79,17 @@ public class BettingController {
 		return new ResponseEntity<>("참여 실패", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	// 배팅 상세 내용
+	// 배팅 상세 내용에 들어가는 코멘트  
+//	@GetMapping("/{bettingId}")
+//	public ResponseEntity<Betting> getBettingAndUserInfo(@PathVariable int bettingId){
+//		// bettingInfo, userInfo에 각각 배팅정보, 유저정보 담겨있음
+//		Betting betting = service.getBettingAndUSerInfo(bettingId);
+//		return new ResponseEntity<>(betting, HttpStatus.OK);
+//	}
 	@GetMapping("/{bettingId}")
-	public ResponseEntity<?> getBettingAndUserInfo(@PathVariable int bettingId, @RequestParam String id){
-		// bettingInfo, userInfo에 각각 배팅정보, 유저정보 담겨있음
-		Map<String, Object> info = service.getBettingAndUSerInfo(bettingId, id);
-		return new ResponseEntity<Map<String, Object>>(info, HttpStatus.OK);
+	public ResponseEntity<List<Review>> getReviewList(@PathVariable int bettingId){
+		List<Review> reviewList = service.getReviewsByBetId(bettingId);
+		return new ResponseEntity<>(reviewList, HttpStatus.OK);
 	}
 	
 	// 배팅 코멘트 작성 

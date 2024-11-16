@@ -9,7 +9,15 @@ public class Review {
 	private String modDate;
 	private int bettingId;
 	
+	private String writerName;
 	
+	
+	public String getWriterName() {
+		return writerName;
+	}
+	public void setWriterName(String writerName) {
+		this.writerName = writerName;
+	}
 	public int getId() {
 		return id;
 	}
