@@ -45,7 +45,7 @@ public class BettingServiceImpl implements BettingService {
 
 	@Override
 	@Transactional
-	public boolean createBetting(User user) {
+	public Betting readyCreateBetting(User user) {
 		Betting newBetting = new Betting();
 
 		Mission mission = missionService.getMissionByIndex();
@@ -64,7 +64,13 @@ public class BettingServiceImpl implements BettingService {
 					(int) ((mission.getMaleMax() - mission.getMaleMin() + 1) * Math.random()) + mission.getMaleMin());
 		}
 		// betting에 인서트
-		return dao.insertBetting(newBetting) > 0;
+		return newBetting;
+	}
+	@Override
+	@Transactional
+	public boolean createBetting(Betting betting) {
+		
+		return dao.insertBetting(betting) > 0;
 	}
 
 	@Override
