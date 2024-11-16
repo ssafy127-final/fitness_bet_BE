@@ -1,7 +1,6 @@
 package com.fitnessbet.betting.model.service;
 
 import java.util.List;
-import java.util.Map;
 
 import com.fitnessbet.betting.model.dto.Betting;
 import com.fitnessbet.betting.model.dto.BettingHistory;
@@ -12,7 +11,7 @@ public interface BettingService {
 
 	List<Betting> getAllListByUserInfo(String userId, String status);
 
-	boolean createBetting(User user);
+	boolean createBetting(Betting betting);
 
 	boolean finishBetting(Betting betting);
 
@@ -33,5 +32,7 @@ public interface BettingService {
 	boolean modifyReview(Review review);
 
 	List<Review> getReviewsByBetId(int bettingId);
+
+	Betting readyCreateBetting(User user);
 
 }

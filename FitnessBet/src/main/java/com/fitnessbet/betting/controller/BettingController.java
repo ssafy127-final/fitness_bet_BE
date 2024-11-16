@@ -41,11 +41,23 @@ public class BettingController {
 		return new ResponseEntity<String>("정보 없음", HttpStatus.NO_CONTENT);
 	}
 
-	@PostMapping("")
-	public ResponseEntity<String> createBetting(@RequestBody User user) {
+	@GetMapping("/create")
+	public ResponseEntity<String> readyCreateBetting(@RequestBody User user) {
 		if (user.getAdmin() == 0)
 			return new ResponseEntity<>("권한 없음", HttpStatus.NOT_ACCEPTABLE);
-		if (service.createBetting(user)) {
+		Betting betting = service.readyCreateBetting(user);
+		if(betting != null) {
+			return new ResponseEntity<>("랜덤 생성", HttpStatus.OK);
+		}
+		
+		return new ResponseEntity<>("생성 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	@PostMapping("/create")
+	public ResponseEntity<String> createBetting(@RequestBody Betting betting) {
+		if (betting.getUser().getAdmin() == 0)
+			return new ResponseEntity<>("권한 없음", HttpStatus.NOT_ACCEPTABLE);
+		if (service.createBetting(betting)) {
 			return new ResponseEntity<>("생성 완료", HttpStatus.OK);
 		}
 		return new ResponseEntity<>("생성 실패", HttpStatus.INTERNAL_SERVER_ERROR);
