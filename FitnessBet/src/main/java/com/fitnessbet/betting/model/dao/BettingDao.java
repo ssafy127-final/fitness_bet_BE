@@ -34,4 +34,6 @@ public interface BettingDao {
 
 	int updateReview(Review review);
 
+	List<Review> selectReviewList(int bettingId);
+
 }

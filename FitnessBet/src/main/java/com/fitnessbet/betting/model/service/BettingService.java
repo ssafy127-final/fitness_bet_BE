@@ -10,7 +10,7 @@ import com.fitnessbet.user.model.dto.User;
 
 public interface BettingService {
 
-	List<Betting> getAllListByUserInfo(String campus, int classNum, String status);
+	List<Betting> getAllListByUserInfo(String userId, String status);
 
 	boolean createBetting(User user);
 
@@ -20,7 +20,7 @@ public interface BettingService {
 
 	boolean stopBetting(int id);
 
-	Map<String, Object> getBettingAndUSerInfo(int id, String userId);
+//	Betting getBettingAndUSerInfo(int bettingId);
 
 	List<BettingHistory> getBettingHistory(String id);
 
@@ -31,5 +31,7 @@ public interface BettingService {
 	boolean removeReview(int reviewId);
 
 	boolean modifyReview(Review review);
+
+	List<Review> getReviewsByBetId(int bettingId);
 
 }

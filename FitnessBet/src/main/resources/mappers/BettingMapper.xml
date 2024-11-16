@@ -9,6 +9,12 @@
 		<association property="user" javaType="User" autoMapping="true">
 			<id property="id" column="userid"/>
 		</association>
+		<association property="history" javaType="BettingHistory" autoMapping="true">
+			<id property="id" column="historyid"/>
+		</association>
+		<association property="mission" javaType="Mission" autoMapping="true">
+			<id property="id" column="missionid"/>
+		</association>
 	</resultMap>
 	
 	<resultMap type="BettingHistory" id="BettingHistoryWithBettingInfo" autoMapping="true">
@@ -28,10 +34,14 @@
 	</resultMap>
 
 	<select id="selectAll" resultMap="BettingWithChallengerInfo" parameterType="Betting">
-		SELECT B.id, B.challenger, B.mission_id, B.mission_cnt, B.success_cnt, B.fail_cnt, B.success_point, B.fail_point, B.result, B.reg_date, U.id userid, U.campus, U.class_num
+		SELECT B.id, B.challenger, B.mission_id, B.mission_cnt, B.success_cnt, B.fail_cnt, B.success_point, B.fail_point, B.result, B.reg_date, U.id userid, U.campus, U.class_num, U.name, U.currentPoint, BH.id historyid, BH.point, BH.choice, M.id missionid, M.content
 		  FROM BETTING B
 		 INNER JOIN USER U
 		    ON B.challenger = U.id
+		 INNER JOIN MISSION M
+		    ON M.id = B.mission_id
+		  LEFT OUTER JOIN BETTING_HISTORY BH
+		    ON B.id = BH.betting_id
 		 WHERE U.campus = #{user.campus}
 		   AND U.class_num = #{user.classNum}
 		   <if test="result == 0">
@@ -111,5 +121,13 @@
 		   SET content = #{content}, mod_date = current_timestamp()
 		 WHERE id = #{id}
 	</update>
+	
+	<select id="selectReviewList" parameterType="int" resultType="Review">
+		SELECT R.id, R.writer, R.content, R.reg_date, R.mod_date, R.betting_id, U.name writerName 
+		  FROM REVIEW R
+		 INNER JOIN USER U
+		    ON U.id = R.writer
+		 WHERE betting_id = #{bettingId}
+	</select>
 	
 </mapper>

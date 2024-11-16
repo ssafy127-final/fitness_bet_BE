@@ -2,6 +2,7 @@ package com.fitnessbet.betting.model.dto;
 
 import java.util.List;
 
+import com.fitnessbet.mission.model.dto.Mission;
 import com.fitnessbet.user.model.dto.User;
 
 public class Betting {
@@ -18,8 +19,29 @@ public class Betting {
 	
 	private User user; // challenger에 해당하는 정보 조인해서 넣을 것(반, 기수 등등,,)
 	
+	private BettingHistory history; // 로그인 한 유저가 해당 배팅 참여했는지 여부 확인 
+	
+	private Mission mission; // 미션 저장할필드
+	
 	private List<Review> reviews; 
 	
+	
+	public Mission getMission() {
+		return mission;
+	}
+
+	public void setMission(Mission mission) {
+		this.mission = mission;
+	}
+
+	public BettingHistory getHistory() {
+		return history;
+	}
+
+	public void setHistory(BettingHistory history) {
+		this.history = history;
+	}
+
 
 	public List<Review> getReviews() {
 		return reviews;

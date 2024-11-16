@@ -1,8 +1,6 @@
 package com.fitnessbet.betting.model.service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,11 +31,9 @@ public class BettingServiceImpl implements BettingService {
 	}
 
 	@Override
-	public List<Betting> getAllListByUserInfo(String campus, int classNum, String status) {
+	public List<Betting> getAllListByUserInfo(String userId, String status) {
 		Betting betting = new Betting();
-		User user = new User();
-		user.setCampus(campus);
-		user.setClassNum(classNum);
+		User user = userService.getUserById(userId);
 		betting.setUser(user);
 		if (status.equals("now")) {
 			betting.setResult(0);
@@ -120,15 +116,15 @@ public class BettingServiceImpl implements BettingService {
 		return dao.changeBettingStatusDone(id) > 0;
 	}
 
-	@Override
-	public Map<String, Object> getBettingAndUSerInfo(int id, String userId) {
-		Map<String, Object> info = new HashMap<>();
-		Betting bet = dao.selectOneBettingById(id);
-		User userInfo = userService.getUserById(userId);
-		info.put("bettingInfo", bet);
-		info.put("userInfo", userInfo);
-		return info;
-	}
+//	@Override
+//	public Betting getBettingAndUSerInfo(int bettingId) {
+////		Map<String, Object> info = new HashMap<>();
+////		Betting bet = dao.selectOneBettingById(id);
+////		User userInfo = userService.getUserById(userId);
+////		info.put("bettingInfo", bet);
+////		info.put("userInfo", userInfo);
+//		return dao.selectOneBettingById(bettingId);
+//	}
 
 	@Override
 	public List<BettingHistory> getBettingHistory(String id) {
@@ -154,5 +150,10 @@ public class BettingServiceImpl implements BettingService {
 	public boolean modifyReview(Review review) {
 		return dao.updateReview(review) > 0;
 	}
+
+	@Override
+	public List<Review> getReviewsByBetId(int bettingId) {
+		return dao.selectReviewList(bettingId);
+	};
 
 }
