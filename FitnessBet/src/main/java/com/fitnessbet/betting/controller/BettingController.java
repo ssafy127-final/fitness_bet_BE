@@ -55,7 +55,7 @@ public class BettingController {
 	
 	@PostMapping("/create")
 	public ResponseEntity<String> createBetting(@RequestBody Betting betting) {
-		if (betting.getUser().getAdmin() == 0)
+		if (betting.getLoginUser().getAdmin() == 0)
 			return new ResponseEntity<>("권한 없음", HttpStatus.NOT_ACCEPTABLE);
 		if (service.createBetting(betting)) {
 			return new ResponseEntity<>("생성 완료", HttpStatus.OK);
@@ -99,7 +99,7 @@ public class BettingController {
 //		return new ResponseEntity<>(betting, HttpStatus.OK);
 //	}
 	@GetMapping("/{bettingId}")
-	public ResponseEntity<List<Review>> getReviewList(@PathVariable int bettingId){
+	public ResponseEntity<List<Review>> getReviewList(@PathVariable int bettingId, @RequestParam("userId") String userId){
 		List<Review> reviewList = service.getReviewsByBetId(bettingId);
 		return new ResponseEntity<>(reviewList, HttpStatus.OK);
 	}

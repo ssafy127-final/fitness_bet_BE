@@ -17,8 +17,27 @@ public class Betting {
 	private int result;
 	private String regDate;
 	
-	private User user; // challenger에 해당하는 정보 조인해서 넣을 것(반, 기수 등등,,)
+	private User challengeUser; // challenger에 해당하는 정보 조인해서 넣을 것(반, 기수 등등,,)
+	private User loginUser;
 	
+		
+
+	public User getChallengeUser() {
+		return challengeUser;
+	}
+
+	public void setChallengeUser(User challengeUser) {
+		this.challengeUser = challengeUser;
+	}
+
+	public User getLoginUser() {
+		return loginUser;
+	}
+
+	public void setLoginUser(User loginUser) {
+		this.loginUser = loginUser;
+	}
+
 	private BettingHistory history; // 로그인 한 유저가 해당 배팅 참여했는지 여부 확인 
 	
 	private Mission mission; // 미션 저장할필드
@@ -131,13 +150,7 @@ public class Betting {
 		this.regDate = regDate;
 	}
 
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
+	
 	
 	
 	
