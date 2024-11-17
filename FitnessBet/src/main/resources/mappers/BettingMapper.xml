@@ -6,7 +6,7 @@
 <mapper namespace="com.fitnessbet.betting.model.dao.BettingDao">
 	<resultMap type="Betting" id="BettingWithChallengerInfo" autoMapping="true">
 		<id property="id" column="id"/>
-		<association property="user" javaType="User" autoMapping="true">
+		<association property="challengeUser" javaType="User" autoMapping="true">
 			<id property="id" column="userid"/>
 		</association>
 		<association property="history" javaType="BettingHistory" autoMapping="true">
@@ -34,7 +34,7 @@
 	</resultMap>
 
 	<select id="selectAll" resultMap="BettingWithChallengerInfo" parameterType="Betting">
-		SELECT B.id, B.challenger, B.mission_id, B.mission_cnt, B.success_cnt, B.fail_cnt, B.success_point, B.fail_point, B.result, B.reg_date, U.id userid, U.campus, U.class_num, U.name, U.currentPoint, BH.id historyid, BH.point, BH.choice, M.id missionid, M.content
+		SELECT B.id, B.challenger, B.mission_id, B.mission_cnt, B.success_cnt, B.fail_cnt, B.success_point, B.fail_point, B.result, B.reg_date, U.id userid, U.campus, U.class_num, U.name, BH.id historyid, BH.point, BH.choice, M.id missionid, M.content
 		  FROM BETTING B
 		 INNER JOIN USER U
 		    ON B.challenger = U.id
@@ -42,8 +42,8 @@
 		    ON M.id = B.mission_id
 		  LEFT OUTER JOIN BETTING_HISTORY BH
 		    ON B.id = BH.betting_id
-		 WHERE U.campus = #{user.campus}
-		   AND U.class_num = #{user.classNum}
+		 WHERE U.campus = #{loginUser.campus}
+		   AND U.class_num = #{loginUser.classNum}
 		   <if test="result == 0">
 		   AND (B.result = 0 OR B.result = 2)
 		   </if>

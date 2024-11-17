@@ -34,7 +34,7 @@ public class BettingServiceImpl implements BettingService {
 	public List<Betting> getAllListByUserInfo(String userId, String status) {
 		Betting betting = new Betting();
 		User user = userService.getUserById(userId);
-		betting.setUser(user);
+		betting.setLoginUser(user);
 		if (status.equals("now")) {
 			betting.setResult(0);
 		} else {
