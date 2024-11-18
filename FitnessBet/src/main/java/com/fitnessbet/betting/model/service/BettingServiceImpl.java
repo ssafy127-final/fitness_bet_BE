@@ -160,6 +160,19 @@ public class BettingServiceImpl implements BettingService {
 	@Override
 	public List<Review> getReviewsByBetId(int bettingId) {
 		return dao.selectReviewList(bettingId);
+	}
+
+	@Override
+	public List<User> getUserList(String campus, int classNum) {
+		User user = new User();
+		user.setCampus(campus);
+		user.setClassNum(classNum);
+		return userService.getList(user);
+	}
+
+	@Override
+	public List<Mission> getMissionList() {
+		return missionService.getAllMissionList();
 	};
 
 }

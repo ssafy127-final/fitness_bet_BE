@@ -5,6 +5,7 @@ import java.util.List;
 import com.fitnessbet.betting.model.dto.Betting;
 import com.fitnessbet.betting.model.dto.BettingHistory;
 import com.fitnessbet.betting.model.dto.Review;
+import com.fitnessbet.mission.model.dto.Mission;
 import com.fitnessbet.user.model.dto.User;
 
 public interface BettingService {
@@ -34,5 +35,9 @@ public interface BettingService {
 	List<Review> getReviewsByBetId(int bettingId);
 
 	Betting readyCreateBetting(User user);
+
+	List<User> getUserList(String campus, int classNum);
+
+	List<Mission> getMissionList();
 
 }

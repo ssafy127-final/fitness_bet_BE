@@ -1,5 +1,6 @@
 package com.fitnessbet.betting.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,11 +20,17 @@ import com.fitnessbet.betting.model.dto.Betting;
 import com.fitnessbet.betting.model.dto.BettingHistory;
 import com.fitnessbet.betting.model.dto.Review;
 import com.fitnessbet.betting.model.service.BettingService;
+import com.fitnessbet.mission.model.dto.Mission;
 import com.fitnessbet.user.model.dto.User;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/betting")
 public class BettingController {
+
+	private static final int TRUE = 1;
 
 	private final BettingService service;
 
@@ -46,13 +53,13 @@ public class BettingController {
 		if (user.getAdmin() == 0)
 			return new ResponseEntity<>("권한 없음", HttpStatus.NOT_ACCEPTABLE);
 		Betting betting = service.readyCreateBetting(user);
-		if(betting != null) {
+		if (betting != null) {
 			return new ResponseEntity<>("랜덤 생성", HttpStatus.OK);
 		}
-		
+
 		return new ResponseEntity<>("생성 실패", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-	
+
 	@PostMapping("/create")
 	public ResponseEntity<String> createBetting(@RequestBody Betting betting) {
 		if (betting.getLoginUser().getAdmin() == 0)
@@ -62,36 +69,37 @@ public class BettingController {
 		}
 		return new ResponseEntity<>("생성 실패", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-	
+
 	// 베팅 종료(관리자 가능)
 	@PutMapping("/{id}/stop")
-	public ResponseEntity<String> stopBetting(@PathVariable("id") int id){
-		if(service.stopBetting(id)) {
+	public ResponseEntity<String> stopBetting(@PathVariable("id") int id) {
+		if (service.stopBetting(id)) {
 			return new ResponseEntity<>("종료 완료", HttpStatus.OK);
 		}
 		return new ResponseEntity<>("종료 실패", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-	
+
 	// 베팅 결과 입력
 	@PutMapping("/{id}/finish")
-	public ResponseEntity<String> finishBetting(@RequestBody Betting betting){
-		if(service.finishBetting(betting)) {
+	public ResponseEntity<String> finishBetting(@RequestBody Betting betting) {
+		if (service.finishBetting(betting)) {
 			return new ResponseEntity<>("결과 입력 완료", HttpStatus.OK);
 		}
 		return new ResponseEntity<>("결과 입력 실패", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-	
-	// 참여자(joinPerson), 배팅 얼마했는지, 어느쪽에 했는지를 Betting 객체에 담아 전달하기(result, fail/success point)
+
+	// 참여자(joinPerson), 배팅 얼마했는지, 어느쪽에 했는지를 Betting 객체에 담아 전달하기(result, fail/success
+	// point)
 	@PutMapping("/{id}")
-	public ResponseEntity<String> joinBetting(@PathVariable("id") int id, @RequestBody BettingHistory bettingInfo){
+	public ResponseEntity<String> joinBetting(@PathVariable("id") int id, @RequestBody BettingHistory bettingInfo) {
 		bettingInfo.setBettingId(id);
-		if(service.joinBetting(bettingInfo)) {
+		if (service.joinBetting(bettingInfo)) {
 			return new ResponseEntity<>("참여 완료", HttpStatus.OK);
 		}
 		return new ResponseEntity<>("참여 실패", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-	
-	// 배팅 상세 내용에 들어가는 코멘트  
+
+	// 배팅 상세 내용에 들어가는 코멘트
 //	@GetMapping("/{bettingId}")
 //	public ResponseEntity<Betting> getBettingAndUserInfo(@PathVariable int bettingId){
 //		// bettingInfo, userInfo에 각각 배팅정보, 유저정보 담겨있음
@@ -99,60 +107,97 @@ public class BettingController {
 //		return new ResponseEntity<>(betting, HttpStatus.OK);
 //	}
 	@GetMapping("/{bettingId}")
-	public ResponseEntity<List<Review>> getReviewList(@PathVariable int bettingId, @RequestParam("userId") String userId){
+	public ResponseEntity<List<Review>> getReviewList(@PathVariable int bettingId,
+			@RequestParam("userId") String userId) {
 		List<Review> reviewList = service.getReviewsByBetId(bettingId);
 		return new ResponseEntity<>(reviewList, HttpStatus.OK);
 	}
-	
-	// 배팅 코멘트 작성 
+
+	// 배팅 코멘트 작성
 	@PostMapping("/review")
-	public ResponseEntity<String> writeReview(@RequestBody Review review){
-		if(service.createReview(review)) {
+	public ResponseEntity<String> writeReview(@RequestBody Review review) {
+		if (service.createReview(review)) {
 			return new ResponseEntity<>("작성 성공", HttpStatus.OK);
 		}
 		return new ResponseEntity<>("작성 실패", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-	
+
 	@PutMapping("/review")
-	public ResponseEntity<String> modifyReview(@RequestBody Review review){
-		if(service.modifyReview(review)) {
+	public ResponseEntity<String> modifyReview(@RequestBody Review review) {
+		if (service.modifyReview(review)) {
 			return new ResponseEntity<>("수정 성공", HttpStatus.OK);
 		}
 		return new ResponseEntity<>("수정 실패", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-	
+
 	@DeleteMapping("/review")
-	public ResponseEntity<String> removeReview(@RequestParam int reviewId){
-		if(service.removeReview(reviewId)) {
+	public ResponseEntity<String> removeReview(@RequestParam int reviewId) {
+		if (service.removeReview(reviewId)) {
 			return new ResponseEntity<>("삭제 성공", HttpStatus.OK);
 		}
 		return new ResponseEntity<>("삭제 실패", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-	
-	
-	
+
 	// 참여 배팅 목록 조회
-	@GetMapping("/history/join") 
-	public ResponseEntity<?> getBettingListByUserId(@RequestParam String id){
+	@GetMapping("/history/join")
+	public ResponseEntity<?> getBettingListByUserId(@RequestParam String id) {
 		List<BettingHistory> list = service.getBettingHistory(id);
-		
+
 		if (list != null && list.size() != 0) {
 			return new ResponseEntity<List<BettingHistory>>(list, HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("정보 없음", HttpStatus.NO_CONTENT);
 	}
-	
+
 	// 챌린저로 참여 목록 조회
 	@GetMapping("/history/challenger")
-	public ResponseEntity<?> getBettingListByChallengerId(@RequestParam String id){
+	public ResponseEntity<?> getBettingListByChallengerId(@RequestParam String id) {
 		List<Betting> list = service.getChallengerBettingHistory(id);
-		
+
 		if (list != null && list.size() != 0) {
 			return new ResponseEntity<List<Betting>>(list, HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("정보 없음", HttpStatus.NO_CONTENT);
 	}
-	
-	
+
+	@GetMapping("/slot")
+	public ResponseEntity<?> getSlotData(HttpServletRequest request) {
+		if (!verifyAdmin(request)) { // 관리자 권한 확인
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("관리자 권한이 필요합니다.");
+		}
+		
+		HttpSession session = request.getSession(false);
+
+		String campus = (String) session.getAttribute("campus");
+		Integer classNumObj = (Integer) session.getAttribute("classNum"); // nullException 방지
+		if (campus == null || classNumObj == null) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("필수 세션 정보가 누락되었습니다.");
+		}
+		
+		int classNum = classNumObj.intValue(); // Integer ==> int로 
+		List<User> userList = service.getUserList(campus, classNum);
+		List<Mission> missionList = service.getMissionList();
+		if (userList.isEmpty() && missionList.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body("데이터가 없습니다.");
+		}
+		Map<String, Object> response = new HashMap<>();
+		response.put("users", userList);
+		response.put("missions", missionList);
+
+		return ResponseEntity.ok(response); // Map을 JSON 형태로 변환하여 반환
+	}
+
+	private boolean verifyAdmin(HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			System.out.println("세션 만료 혹은 로그인 해야함");
+			return false;
+		}
+		int isAdmin = (int) session.getAttribute("isAdmin");
+		if (isAdmin == TRUE) {
+			return true;
+		}
+		return false;
+	}
 
 }
