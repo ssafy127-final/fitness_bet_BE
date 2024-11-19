@@ -20,6 +20,11 @@ public class Betting {
 	private User challengeUser; // challenger에 해당하는 정보 조인해서 넣을 것(반, 기수 등등,,)
 	private User loginUser;
 	
+	private BettingHistory history; // 로그인 한 유저가 해당 배팅 참여했는지 여부 확인 
+	
+	private Mission mission; // 미션 저장할필드
+	
+	private List<Review> reviews; 
 		
 
 	public User getChallengeUser() {
@@ -37,13 +42,6 @@ public class Betting {
 	public void setLoginUser(User loginUser) {
 		this.loginUser = loginUser;
 	}
-
-	private BettingHistory history; // 로그인 한 유저가 해당 배팅 참여했는지 여부 확인 
-	
-	private Mission mission; // 미션 저장할필드
-	
-	private List<Review> reviews; 
-	
 	
 	public Mission getMission() {
 		return mission;
