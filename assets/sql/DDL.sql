@@ -152,6 +152,3 @@ ALTER TABLE `PRODUCT_HISTORY` ADD CONSTRAINT `FK_PRODUCT_TO_PRODUCT_HISTORY_1` F
 REFERENCES `PRODUCT` (
 	`id`
 );
-
-create user 'ssafy'@'localhost' identified by 'ssafy';
-grant all privileges on *.* to 'ssafy'@'localhost';
