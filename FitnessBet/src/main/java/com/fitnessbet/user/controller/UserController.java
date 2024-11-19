@@ -16,6 +16,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/user")
+@CrossOrigin("*")
 public class UserController {
 
 	private static final int APPROVED = 1;
@@ -60,6 +62,7 @@ public class UserController {
 		HttpSession newSession = request.getSession(true);
 
 		User user = userService.authenticate(loginRequestInfo.getId(), loginRequestInfo.getPw());
+		System.out.println(user.toString());
 		if (user != null) {
 			if (user.getAccept() == APPROVED) { // 0 은 가입 대기중 / 1은 가입 승인 완료
 				newSession.setAttribute("userId", user.getId());
@@ -68,7 +71,7 @@ public class UserController {
 				newSession.setAttribute("campus", user.getCampus());
 				newSession.setAttribute("classNum", user.getClassNum());
 				newSession.setMaxInactiveInterval(SESSION_TIMEOUT); // 1시간 동안 아무 상호작용 없으면 자동 세션 만료
-				return ResponseEntity.ok("로그인 성공");
+				return ResponseEntity.status(HttpStatus.OK).body(user);
 			}
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("아직 가입 승인이 허가되지 않았습니다.");
 
