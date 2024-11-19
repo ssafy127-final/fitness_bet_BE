@@ -45,15 +45,16 @@ public class BettingServiceImpl implements BettingService {
 
 	@Override
 	@Transactional
-	public Betting readyCreateBetting(User user) {
+	public Betting readyCreateBetting(String id) {
 		Betting newBetting = new Betting();
 
 		Mission mission = missionService.getMissionByIndex();
 		
+		User user = userService.getUserById(id);
 
 		User challenger = userService.selectChallenger(user);
-		newBetting.setChallenger(challenger.getId());
-		newBetting.setMissionId(mission.getId());
+		newBetting.setChallengeUser(challenger);
+		newBetting.setMission(mission);
 
 		// 성별 따라 범위에서 랜덤돌리기
 		if (challenger.getGender() == 0) {
@@ -63,7 +64,6 @@ public class BettingServiceImpl implements BettingService {
 			newBetting.setMissionCnt(
 					(int) ((mission.getMaleMax() - mission.getMaleMin() + 1) * Math.random()) + mission.getMaleMin());
 		}
-		// betting에 인서트
 		return newBetting;
 	}
 	@Override

@@ -51,21 +51,23 @@ public class BettingController {
 	}
 
 	@GetMapping("/create")
-	public ResponseEntity<String> readyCreateBetting(@RequestBody User user) {
-		if (user.getAdmin() == 0)
-			return new ResponseEntity<>("권한 없음", HttpStatus.NOT_ACCEPTABLE);
-		Betting betting = service.readyCreateBetting(user);
+	public ResponseEntity<?> readyCreateBetting(HttpServletRequest request, @RequestParam String id) {
+		if (!verifyAdmin(request)) { // 관리자 권한 확인
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("관리자 권한이 필요합니다.");
+		}
+		Betting betting = service.readyCreateBetting(id);
 		if (betting != null) {
-			return new ResponseEntity<>("랜덤 생성", HttpStatus.OK);
+			return new ResponseEntity<Betting>(betting, HttpStatus.OK);
 		}
 
 		return new ResponseEntity<>("생성 실패", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@PostMapping("/create")
-	public ResponseEntity<String> createBetting(@RequestBody Betting betting) {
-		if (betting.getLoginUser().getAdmin() == 0)
-			return new ResponseEntity<>("권한 없음", HttpStatus.NOT_ACCEPTABLE);
+	public ResponseEntity<String> createBetting(HttpServletRequest request, @RequestBody Betting betting) {
+		if (!verifyAdmin(request)) { // 관리자 권한 확인
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("관리자 권한이 필요합니다.");
+		}
 		if (service.createBetting(betting)) {
 			return new ResponseEntity<>("생성 완료", HttpStatus.OK);
 		}
