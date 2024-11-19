@@ -1,29 +1,26 @@
 package com.fitnessbet.user.controller;
 
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fitnessbet.user.model.dto.LoginRequestInfo;
 import com.fitnessbet.user.model.dto.User;
 import com.fitnessbet.user.model.service.UserService;
-import com.fitnessbet.user.model.service.UserServiceImpl;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-
-import java.util.List;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/user")
@@ -141,11 +138,20 @@ public class UserController {
 		List<User> list = userService.getList(user);
 		return ResponseEntity.status(HttpStatus.OK).body(list);
 	}
-
+	
+	@GetMapping("/check-id")
+	public ResponseEntity<?> checkUniqueId(@RequestParam("id") String id){
+		User user = userService.getUserById(id);
+		if (user != null) {
+			// 결과 값이 있다면 중복이므로
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 가입되어 있는 학번입니다.");
+		}
+		// 결과 값이 없다면 중복이 아니다.
+		return ResponseEntity.status(HttpStatus.OK).body("확인되었습니다.");
+	}
 	private boolean verifyAdmin(HttpServletRequest request) {
 		HttpSession session = request.getSession(false);
 		if (session == null) {
-			System.out.println("세션 만료 혹은 로그인 해야함");
 			return false;
 		}
 		int isAdmin = (int) session.getAttribute("isAdmin");
