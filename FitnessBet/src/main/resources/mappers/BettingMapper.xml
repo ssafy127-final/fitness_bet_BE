@@ -4,6 +4,7 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.fitnessbet.betting.model.dao.BettingDao">
+
 	<resultMap type="Betting" id="BettingWithChallengerInfo" autoMapping="true">
 		<id property="id" column="id"/>
 		<association property="challengeUser" javaType="User" autoMapping="true">
@@ -19,7 +20,7 @@
 	
 	<resultMap type="BettingHistory" id="BettingHistoryWithBettingInfo" autoMapping="true">
 		<id property="id" column="id"/>
-		<association property="betting" javaType="Betting" autoMapping="true">
+		<association property="betting" resultMap="BettingWithChallengerInfo" autoMapping="true">
 			<id property="id" column="betid"/>
 		</association>
 	</resultMap>
@@ -28,6 +29,7 @@
 		<id property="id" column="id"/>
 		<collection property="reviews" resultMap="reviewMap" autoMapping="true"></collection>
 	</resultMap>
+	
 	<resultMap type="Review" id="reviewMap" autoMapping="true">
 		<id property="id" column="reviewid"/>
 		<result property="regDate" column="reviewreg"/>
@@ -93,10 +95,14 @@
 	</select>
 	
 	<select id="selectBettingHistoryByUserId" parameterType="String" resultMap="BettingHistoryWithBettingInfo">
-		SELECT bh.id, bh.player, bh.betting_id, bh.point, bh.choice, b.id betid, b.challenger, b.mission_id, b.mission_cnt, b.success_cnt, b.fail_cnt, b.success_point, b.fail_point, b.result, b.reg_date
+		SELECT bh.id, bh.player, bh.betting_id, bh.point, bh.choice, b.id betid, b.challenger, b.mission_id, b.mission_cnt, b.success_cnt, b.fail_cnt, b.success_point, b.fail_point, b.result, b.reg_date, u.id userid, u.name, m.id missionid, m.content
 		  FROM BETTING_HISTORY bh
 		 INNER JOIN BETTING b
 		    ON b.id = bh.betting_id
+		 INNER JOIN USER u
+		    ON u.id = b.challenger
+		 INNER JOIN MISSION m
+		    ON m.id = b.mission_id
 		 WHERE bh.player = #{id}
 	</select>
 	
