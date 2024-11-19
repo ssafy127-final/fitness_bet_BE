@@ -148,6 +148,13 @@ public class Betting {
 		this.regDate = regDate;
 	}
 
+	@Override
+	public String toString() {
+		return "Betting [id=" + id + ", challenger=" + challenger + ", missionId=" + missionId + ", missionCnt="
+				+ missionCnt + ", successCnt=" + successCnt + ", failCnt=" + failCnt + ", successPoint=" + successPoint
+				+ ", failPoint=" + failPoint + ", result=" + result + ", regDate=" + regDate + "]";
+	}
+
 	
 	
 	

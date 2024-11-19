@@ -34,7 +34,7 @@ public interface BettingService {
 
 	List<Review> getReviewsByBetId(int bettingId);
 
-	Betting readyCreateBetting(User user);
+	Betting readyCreateBetting(String id);
 
 	List<User> getUserList(String campus, int classNum);
 
