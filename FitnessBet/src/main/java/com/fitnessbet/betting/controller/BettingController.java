@@ -29,7 +29,7 @@ import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/betting")
-@CrossOrigin("*")
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 public class BettingController {
 
 	private static final int TRUE = 1;
@@ -196,6 +196,7 @@ public class BettingController {
 			return false;
 		}
 		int isAdmin = (int) session.getAttribute("isAdmin");
+		System.out.println(isAdmin);
 		if (isAdmin == TRUE) {
 			return true;
 		}

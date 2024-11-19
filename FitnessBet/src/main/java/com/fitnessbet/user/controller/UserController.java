@@ -24,7 +24,8 @@ import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/user")
-@CrossOrigin("*")
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+
 public class UserController {
 
 	private static final int APPROVED = 1;
@@ -52,14 +53,14 @@ public class UserController {
 		// 기존 세션 폐기
 		HttpSession oldSession = request.getSession(false);
 		if (oldSession != null) {
+			System.out.println("Invalidating Old Session: " + oldSession.getId());
 			oldSession.invalidate(); // 기존 세션을 무효화.
 		}
 
 		// 새로운 세션 생성
 		HttpSession newSession = request.getSession(true);
-
+		System.out.println("New Session ID: " + newSession.getId()); // 세션 ID 출력
 		User user = userService.authenticate(loginRequestInfo.getId(), loginRequestInfo.getPw());
-		System.out.println(user.toString());
 		if (user != null) {
 			if (user.getAccept() == APPROVED) { // 0 은 가입 대기중 / 1은 가입 승인 완료
 				newSession.setAttribute("userId", user.getId());
@@ -68,6 +69,9 @@ public class UserController {
 				newSession.setAttribute("campus", user.getCampus());
 				newSession.setAttribute("classNum", user.getClassNum());
 				newSession.setMaxInactiveInterval(SESSION_TIMEOUT); // 1시간 동안 아무 상호작용 없으면 자동 세션 만료
+				System.out.println("New Session Created: " + newSession.getId());
+				System.out.println(newSession.getAttribute("userId"));
+				System.out.println(newSession.getAttribute("isAdmin"));
 				return ResponseEntity.status(HttpStatus.OK).body(user);
 			}
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("아직 가입 승인이 허가되지 않았습니다.");
@@ -149,6 +153,7 @@ public class UserController {
 		// 결과 값이 없다면 중복이 아니다.
 		return ResponseEntity.status(HttpStatus.OK).body("확인되었습니다.");
 	}
+	
 	private boolean verifyAdmin(HttpServletRequest request) {
 		HttpSession session = request.getSession(false);
 		if (session == null) {
