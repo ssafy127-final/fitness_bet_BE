@@ -156,10 +156,12 @@ public class MissionController {
 
 	@GetMapping("")
 	public ResponseEntity<?> getList(HttpServletRequest request) {
-
-		if (!verifyAdmin(request)) { // 관리자 권한 확인
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("관리자 권한이 필요합니다.");
+		HttpSession session = request.getSession(false);
+		
+		if (session == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
 		}
+		
 		List<Mission> list = ms.getAllMissionList();
 
 		if (list == null || list.isEmpty()) {
