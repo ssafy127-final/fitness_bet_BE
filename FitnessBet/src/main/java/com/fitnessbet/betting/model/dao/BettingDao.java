@@ -36,4 +36,8 @@ public interface BettingDao {
 
 	List<Review> selectReviewList(int bettingId);
 
+	Betting selectOneBettingDetail(int bettingId);
+
+	Betting selectOneBetting(int id);
+
 }

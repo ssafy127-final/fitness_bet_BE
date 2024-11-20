@@ -50,28 +50,24 @@ public class BettingController {
 		return new ResponseEntity<String>("정보 없음", HttpStatus.NO_CONTENT);
 	}
 
-	@GetMapping("/create")
-	public ResponseEntity<?> readyCreateBetting(HttpServletRequest request, @RequestParam String id) {
-		if (!verifyAdmin(request)) { // 관리자 권한 확인
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("관리자 권한이 필요합니다.");
-		}
-		Betting betting = service.readyCreateBetting(id);
-		if (betting != null) {
-			return new ResponseEntity<Betting>(betting, HttpStatus.OK);
-		}
 
-		return new ResponseEntity<>("생성 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+	
+	@GetMapping("/{bettingId}")
+	public ResponseEntity<List<Review>> getReviewList(@PathVariable int bettingId,
+			@RequestParam("userId") String userId) {
+		List<Review> reviewList = service.getReviewsByBetId(bettingId);
+		return new ResponseEntity<>(reviewList, HttpStatus.OK);
 	}
-
-	@PostMapping("/create")
-	public ResponseEntity<String> createBetting(HttpServletRequest request, @RequestBody Betting betting) {
-		if (!verifyAdmin(request)) { // 관리자 권한 확인
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("관리자 권한이 필요합니다.");
+	
+	// 참여자(joinPerson), 배팅 얼마했는지, 어느쪽에 했는지를 Betting 객체에 담아 전달하기(result, fail/success
+	// point)
+	@PutMapping("/{id}")
+	public ResponseEntity<String> joinBetting(@PathVariable("id") int id, @RequestBody BettingHistory bettingInfo) {
+		bettingInfo.setBettingId(id);
+		if (service.joinBetting(bettingInfo)) {
+			return new ResponseEntity<>("참여 완료", HttpStatus.OK);
 		}
-		if (service.createBetting(betting)) {
-			return new ResponseEntity<>("생성 완료", HttpStatus.OK);
-		}
-		return new ResponseEntity<>("생성 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>("참여 실패", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	// 베팅 종료(관리자 가능)
@@ -85,38 +81,48 @@ public class BettingController {
 
 	// 베팅 결과 입력
 	@PutMapping("/{id}/finish")
-	public ResponseEntity<String> finishBetting(@RequestBody Betting betting) {
+	public ResponseEntity<String> finishBetting(@PathVariable("id") int id,@RequestBody Betting betting) {
+		betting.setId(id);
 		if (service.finishBetting(betting)) {
 			return new ResponseEntity<>("결과 입력 완료", HttpStatus.OK);
 		}
 		return new ResponseEntity<>("결과 입력 실패", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-
-	// 참여자(joinPerson), 배팅 얼마했는지, 어느쪽에 했는지를 Betting 객체에 담아 전달하기(result, fail/success
-	// point)
-	@PutMapping("/{id}")
-	public ResponseEntity<String> joinBetting(@PathVariable("id") int id, @RequestBody BettingHistory bettingInfo) {
-		bettingInfo.setBettingId(id);
-		if (service.joinBetting(bettingInfo)) {
-			return new ResponseEntity<>("참여 완료", HttpStatus.OK);
+		
+	@GetMapping("/detail/{bettingId}")
+	public ResponseEntity<?> getBettingDetail(@PathVariable("bettingId") int bettingId){
+		Betting betting = service.getBettingDetail(bettingId);
+		if (betting.getId() !=0 ) {
+			return new ResponseEntity<Betting>(betting, HttpStatus.OK);
+		}else {
+			return new ResponseEntity<>("해당 배팅 결과 가져오지 못함", HttpStatus.NO_CONTENT);
 		}
-		return new ResponseEntity<>("참여 실패", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-	// 배팅 상세 내용에 들어가는 코멘트
-//	@GetMapping("/{bettingId}")
-//	public ResponseEntity<Betting> getBettingAndUserInfo(@PathVariable int bettingId){
-//		// bettingInfo, userInfo에 각각 배팅정보, 유저정보 담겨있음
-//		Betting betting = service.getBettingAndUSerInfo(bettingId);
-//		return new ResponseEntity<>(betting, HttpStatus.OK);
-//	}
-	@GetMapping("/{bettingId}")
-	public ResponseEntity<List<Review>> getReviewList(@PathVariable int bettingId,
-			@RequestParam("userId") String userId) {
-		List<Review> reviewList = service.getReviewsByBetId(bettingId);
-		return new ResponseEntity<>(reviewList, HttpStatus.OK);
+	@GetMapping("/create")
+	public ResponseEntity<?> readyCreateBetting(HttpServletRequest request, @RequestParam String id) {
+		if (!verifyAdmin(request)) { // 관리자 권한 확인
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("관리자 권한이 필요합니다.");
+		}
+		Betting betting = service.readyCreateBetting(id);
+		if (betting != null) {
+			return new ResponseEntity<Betting>(betting, HttpStatus.OK);
+		}
+		
+		return new ResponseEntity<>("생성 실패", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-
+	
+	@PostMapping("/create")
+	public ResponseEntity<String> createBetting(HttpServletRequest request, @RequestBody Betting betting) {
+		if (!verifyAdmin(request)) { // 관리자 권한 확인
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("관리자 권한이 필요합니다.");
+		}
+		if (service.createBetting(betting)) {
+			return new ResponseEntity<>("생성 완료", HttpStatus.OK);
+		}
+		return new ResponseEntity<>("생성 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
 	// 배팅 코멘트 작성
 	@PostMapping("/review")
 	public ResponseEntity<String> writeReview(@RequestBody Review review) {
