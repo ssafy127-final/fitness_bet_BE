@@ -77,15 +77,16 @@ public class BettingServiceImpl implements BettingService {
 	@Transactional
 	public boolean finishBetting(Betting betting) {
 		if (dao.finishBetting(betting) > 0) {
-			List<BettingHistory> winUsers = dao.selectWinner(betting);
+			Betting betInfo = dao.selectOneBetting(betting.getId());
+			List<BettingHistory> winUsers = dao.selectWinner(betInfo);
 			// 포인트 정산
-			int totalPoint = betting.getFailPoint() + betting.getSuccessPoint();
+			int totalPoint = betInfo.getFailPoint() + betInfo.getSuccessPoint();
 			int successCnt = 0;
 			for (BettingHistory info : winUsers) {
-				if(betting.getResult()==1) {
-					totalPoint = (int) Math.ceil(totalPoint / (betting.getSuccessPoint()/info.getPoint()));
+				if(betInfo.getResult()==1) {
+					totalPoint = (int) Math.ceil(totalPoint / (betInfo.getSuccessPoint()/info.getPoint()));
 				}else {
-					totalPoint = (int) Math.ceil(totalPoint / (betting.getFailPoint()/info.getPoint()));
+					totalPoint = (int) Math.ceil(totalPoint / (betInfo.getFailPoint()/info.getPoint()));
 				}
 				successCnt += userService.calculateReward(info.getPlayer(),totalPoint);
 			}
@@ -98,11 +99,13 @@ public class BettingServiceImpl implements BettingService {
 	@Override
 	@Transactional
 	public boolean joinBetting(BettingHistory bettingInfo) {
+		System.out.println(bettingInfo.getBettingId()+"!!!!! id");
 		// 참여 유저 포인트 감소시키기
 		if (userService.minusBetPoint(bettingInfo.getPlayer(), bettingInfo.getPoint()) > 0) {
 			
 			if (dao.addBetHistory(bettingInfo) > 0) {
 				Betting betting = dao.selectOneBettingById(bettingInfo.getBettingId());
+				System.out.println(betting.toString()+"!!!!! betting");
 				if (bettingInfo.getChoice() == 1) { // 성공선택
 					betting.setSuccessCnt(betting.getSuccessCnt() + 1);
 					betting.setSuccessPoint(betting.getSuccessPoint() + bettingInfo.getPoint());
@@ -173,6 +176,11 @@ public class BettingServiceImpl implements BettingService {
 	@Override
 	public List<Mission> getMissionList() {
 		return missionService.getAllMissionList();
+	}
+
+	@Override
+	public Betting getBettingDetail(int bettingId) {
+		return dao.selectOneBettingDetail(bettingId);
 	};
 
 }
