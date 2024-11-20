@@ -2,6 +2,7 @@ package com.fitnessbet.user.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -128,23 +129,23 @@ public class UserController {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("관리자 권한이 필요합니다.");
 		}
 		HttpSession session = request.getSession(false);
-		
-		if(session.getAttribute("classNum") == null || session.getAttribute("campus") == null) {
+
+		if (session.getAttribute("classNum") == null || session.getAttribute("campus") == null) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("필수 세션 속성이 누락되었습니다.");
 		}
-		
+
 		int classNum = (int) session.getAttribute("classNum");
 		String campus = (String) session.getAttribute("campus");
 		User user = new User();
 		user.setClassNum(classNum);
 		user.setCampus(campus);
-		
+
 		List<User> list = userService.getList(user);
 		return ResponseEntity.status(HttpStatus.OK).body(list);
 	}
-	
+
 	@GetMapping("/check-id")
-	public ResponseEntity<?> checkUniqueId(@RequestParam("id") String id){
+	public ResponseEntity<?> checkUniqueId(@RequestParam("id") String id) {
 		User user = userService.getUserById(id);
 		if (user != null) {
 			// 결과 값이 있다면 중복이므로
@@ -153,7 +154,21 @@ public class UserController {
 		// 결과 값이 없다면 중복이 아니다.
 		return ResponseEntity.status(HttpStatus.OK).body("확인되었습니다.");
 	}
-	
+
+	@GetMapping("/autoLogin")
+	public ResponseEntity<?> autoLoginBySessionInfo(HttpServletRequest request, @RequestParam String id) {
+		HttpSession session = request.getSession(false);
+		boolean isLogin = false;
+		if (session != null) {
+			isLogin = true;
+		}
+		String userId = (String) session.getAttribute("userId");
+		if (isLogin && userId.equals(id)) {
+			return ResponseEntity.status(HttpStatus.OK).body(userService.getUserById(id));
+		}
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("자동 로그인 실패");
+	}
+
 	private boolean verifyAdmin(HttpServletRequest request) {
 		HttpSession session = request.getSession(false);
 		if (session == null) {
