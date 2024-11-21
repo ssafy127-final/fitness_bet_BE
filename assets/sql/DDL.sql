@@ -67,7 +67,8 @@ CREATE TABLE `BETTING_HISTORY` (
 	`betting_id`	int	NOT NULL	COMMENT 'betting 테이블 id 참조',
 	`player`	VARCHAR(15)	NOT NULL	COMMENT 'user테이블 id 참조',
 	`point`	int	NOT NULL,
-	`choice`	int	NOT NULL,
+	`choice` int	NOT NULL,
+    `prize` int,
     PRIMARY KEY (`id`)
 );
 
