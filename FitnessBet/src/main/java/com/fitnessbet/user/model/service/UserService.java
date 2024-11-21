@@ -32,4 +32,6 @@ public interface UserService {
 	public boolean recordPointHistory(PointHistory ph);
 
 	public boolean addDailyPoint(String id, int dailyPoint);
+
+	public List<PointHistory> getPointHistoryList(String userId);
 }

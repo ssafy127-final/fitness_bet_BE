@@ -36,4 +36,6 @@ public interface UserDao {
 	public int visitedCheck(User user);
 	
 	public int insertPointHistory(PointHistory ph);
+
+	public List<PointHistory> selectAllPointHistory(String userId);
 }

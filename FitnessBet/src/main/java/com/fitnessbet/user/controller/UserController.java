@@ -2,9 +2,7 @@ package com.fitnessbet.user.controller;
 
 import java.util.List;
 
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fitnessbet.user.model.dto.LoginRequestInfo;
+import com.fitnessbet.user.model.dto.PointHistory;
 import com.fitnessbet.user.model.dto.User;
 import com.fitnessbet.user.model.service.UserService;
 
@@ -185,7 +184,14 @@ public class UserController {
 	    }
 	}
 	
-	
+	@GetMapping("/point/history")
+	public ResponseEntity<?> getPointHistoryList(@RequestParam("userId") String userId){
+		List<PointHistory> list = userService.getPointHistoryList(userId);
+		if(list!=null && list.size()>0) {
+			return new ResponseEntity<List<PointHistory>>(list, HttpStatus.OK);
+		}
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
 	
 	
 	

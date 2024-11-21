@@ -109,7 +109,6 @@ public class BettingServiceImpl implements BettingService {
 			
 			if (dao.addBetHistory(bettingInfo) > 0) {
 				Betting betting = dao.selectOneBettingById(bettingInfo.getBettingId());
-				System.out.println(betting.toString()+"!!!!! betting");
 				if (bettingInfo.getChoice() == 1) { // 성공선택
 					betting.setSuccessCnt(betting.getSuccessCnt() + 1);
 					betting.setSuccessPoint(betting.getSuccessPoint() + bettingInfo.getPoint());

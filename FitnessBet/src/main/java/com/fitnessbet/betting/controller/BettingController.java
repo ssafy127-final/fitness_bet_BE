@@ -60,7 +60,7 @@ public class BettingController {
 	}
 	
 	// 참여자(joinPerson), 배팅 얼마했는지, 어느쪽에 했는지를 Betting 객체에 담아 전달하기(result, fail/success
-	// point)
+	// 배팅 참여 
 	@PutMapping("/{id}")
 	public ResponseEntity<String> joinBetting(@PathVariable("id") int id, @RequestBody BettingHistory bettingInfo) {
 		bettingInfo.setBettingId(id);

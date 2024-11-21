@@ -75,6 +75,8 @@
 	(#{userId}, #{productId}, #{bettingId}, #{category}, now(), #{point})
 	</insert>
 	
-	
+	<select id="selectAllPointHistory" parameterType="String">
+		SELECT * FROM POINT_HISTORY WHERE user_id = #{userId}
+	</select>
 	
 </mapper> 
