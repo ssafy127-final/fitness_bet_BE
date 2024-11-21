@@ -88,7 +88,11 @@ public class BettingServiceImpl implements BettingService {
 				}else {
 					totalPoint = (int) Math.ceil(totalPoint / (betInfo.getFailPoint()/info.getPoint()));
 				}
-				successCnt += userService.calculateReward(info.getPlayer(),totalPoint);
+				info.setPrize(totalPoint);
+				if(dao.updateBettingHistoryPrize(info)) {
+					successCnt += userService.calculateReward(info.getPlayer(),totalPoint);
+					
+				}
 			}
 			if (successCnt == winUsers.size())
 				return true;

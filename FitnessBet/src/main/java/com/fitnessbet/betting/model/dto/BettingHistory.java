@@ -7,10 +7,17 @@ public class BettingHistory {
 	private int bettingId;
 	private int point;
 	private int choice;
+	private int prize;
 	
 	private Betting betting;
 	
 	
+	public int getPrize() {
+		return prize;
+	}
+	public void setPrize(int prize) {
+		this.prize = prize;
+	}
 	public Betting getBetting() {
 		return betting;
 	}

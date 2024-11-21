@@ -36,7 +36,7 @@
 	</resultMap>
 
 	<select id="selectAll" resultMap="BettingWithChallengerInfo" parameterType="Betting">
-		SELECT B.id, B.challenger, B.mission_id, B.mission_cnt, B.success_cnt, B.fail_cnt, B.success_point, B.fail_point, B.result, B.reg_date, U.id userid, U.campus, U.class_num, U.name, BH.id historyid, BH.point, BH.choice, M.id missionid, M.content
+		SELECT B.id, B.challenger, B.mission_id, B.mission_cnt, B.success_cnt, B.fail_cnt, B.success_point, B.fail_point, B.result, B.reg_date, U.id userid, U.campus, U.class_num, U.name, BH.id historyid, BH.point, BH.player, BH.choice, M.id missionid, M.content
 		  FROM BETTING B
 		 INNER JOIN USER U
 		    ON B.challenger = U.id
@@ -44,6 +44,7 @@
 		    ON M.id = B.mission_id
 		  LEFT OUTER JOIN BETTING_HISTORY BH
 		    ON B.id = BH.betting_id
+		   AND U.id = BH.player
 		 WHERE U.campus = #{loginUser.campus}
 		   AND U.class_num = #{loginUser.classNum}
 		   <if test="result == 0">
@@ -107,7 +108,7 @@
 	</select>
 	
 	<select id="selectBettingHistoryByUserId" parameterType="String" resultMap="BettingHistoryWithBettingInfo">
-		SELECT bh.id, bh.player, bh.betting_id, bh.point, bh.choice, b.id betid, b.challenger, b.mission_id, b.mission_cnt, b.success_cnt, b.fail_cnt, b.success_point, b.fail_point, b.result, b.reg_date, u.id userid, u.name, m.id missionid, m.content
+		SELECT bh.id, bh.player, bh.betting_id, bh.point, bh.choice, bh.prize, b.id betid, b.challenger, b.mission_id, b.mission_cnt, b.success_cnt, b.fail_cnt, b.success_point, b.fail_point, b.result, b.reg_date, u.id userid, u.name, m.id missionid, m.content
 		  FROM BETTING_HISTORY bh
 		 INNER JOIN BETTING b
 		    ON b.id = bh.betting_id
@@ -153,5 +154,8 @@
 		    ON U.id = R.writer
 		 WHERE betting_id = #{bettingId}
 	</select>
+	<update id="updateBettingHistoryPrize" parameterType="BettingHistory">
+		UPDATE BETTING_HISTORY SET prize = #{prize} WHERE id = #{id}
+	</update>
 	
 </mapper>
