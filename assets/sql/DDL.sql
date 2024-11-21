@@ -4,7 +4,7 @@ USE fitnessbet;
 
 DROP TABLE IF EXISTS `USER`;
 
-CREATE TABLE `user` (
+CREATE TABLE `USER` (
    `id` varchar(15) NOT NULL,
    `pw` varchar(100) NOT NULL,
    `name` varchar(50) NOT NULL,
@@ -84,14 +84,16 @@ CREATE TABLE `PRODUCT` (
     PRIMARY KEY (`id`)
 );
 
-DROP TABLE IF EXISTS `PRODUCT_HISTORY`;
+DROP TABLE IF EXISTS `POINT_HISTORY`;
 
-CREATE TABLE `PRODUCT_HISTORY` (
+CREATE TABLE `POINT_HISTORY` (
 	`id`	int	NOT NULL auto_increment,
-	`user`	VARCHAR(15)	NOT NULL	COMMENT 'user테이블의 id참조',
-	`product`	int	NOT NULL	COMMENT 'product 테이블 id 참조',
-	`date`	date	NOT NULL,
-	`point`	int	NOT NULL,
+    `user_id` varchar(15) NOT NULL,
+    `product_id` int,
+    `betting_id` int,
+    `category` int NOT NULL,
+    `record_date` date NOT NULL,
+    `point` int NOT NULL,
     PRIMARY KEY (`id`)
 );
 
@@ -140,16 +142,23 @@ REFERENCES `USER` (
 	`id`
 );
 
-ALTER TABLE `PRODUCT_HISTORY` ADD CONSTRAINT `FK_USER_TO_PRODUCT_HISTORY_1` FOREIGN KEY (
-	`user`
+ALTER TABLE `POINT_HISTORY` ADD CONSTRAINT `FK_USER_TO_POINT_HISTORY_1` FOREIGN KEY (
+	`user_id`
 )
 REFERENCES `USER` (
 	`id`
 );
 
-ALTER TABLE `PRODUCT_HISTORY` ADD CONSTRAINT `FK_PRODUCT_TO_PRODUCT_HISTORY_1` FOREIGN KEY (
-	`product`
+ALTER TABLE `POINT_HISTORY` ADD CONSTRAINT `FK_PRODUCT_TO_POINT_HISTORY_2` FOREIGN KEY (
+	`product_id`
 )
 REFERENCES `PRODUCT` (
+	`id`
+);
+
+ALTER TABLE `POINT_HISTORY` ADD CONSTRAINT `FK_BETTING_TO_POINT_HISTORY_3` FOREIGN KEY (
+	`betting_id`
+)
+REFERENCES `BETTING` (
 	`id`
 );
