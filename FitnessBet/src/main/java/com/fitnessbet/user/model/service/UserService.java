@@ -2,6 +2,7 @@ package com.fitnessbet.user.model.service;
 
 import java.util.List;
 
+import com.fitnessbet.user.model.dto.PointHistory;
 import com.fitnessbet.user.model.dto.User;
 
 public interface UserService {
@@ -25,4 +26,10 @@ public interface UserService {
 	public int calculateReward(String id, int reward);
 	
 	public int minusBetPoint(String id, int betPoint);
+	
+	public boolean updateVisited(User user);
+	
+	public boolean recordPointHistory(PointHistory ph);
+
+	public boolean addDailyPoint(String id, int dailyPoint);
 }

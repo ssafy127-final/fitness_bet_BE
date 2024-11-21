@@ -55,13 +55,11 @@ public class UserController {
 		// 기존 세션 폐기
 		HttpSession oldSession = request.getSession(false);
 		if (oldSession != null) {
-			System.out.println("Invalidating Old Session: " + oldSession.getId());
 			oldSession.invalidate(); // 기존 세션을 무효화.
 		}
 
 		// 새로운 세션 생성
 		HttpSession newSession = request.getSession(true);
-		System.out.println("New Session ID: " + newSession.getId()); // 세션 ID 출력
 		User user = userService.authenticate(loginRequestInfo.getId(), loginRequestInfo.getPw());
 		if (user != null) {
 			if (user.getAccept() == APPROVED) { // 0 은 가입 대기중 / 1은 가입 승인 완료
@@ -71,9 +69,6 @@ public class UserController {
 				newSession.setAttribute("campus", user.getCampus());
 				newSession.setAttribute("classNum", user.getClassNum());
 				newSession.setMaxInactiveInterval(SESSION_TIMEOUT); // 1시간 동안 아무 상호작용 없으면 자동 세션 만료
-				System.out.println("New Session Created: " + newSession.getId());
-				System.out.println(newSession.getAttribute("userId"));
-				System.out.println(newSession.getAttribute("isAdmin"));
 				return ResponseEntity.status(HttpStatus.OK).body(user);
 			}
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("아직 가입 승인이 허가되지 않았습니다.");
@@ -168,7 +163,7 @@ public class UserController {
 	}
 	
 	@PostMapping("/daily")
-	public ResponseEntity<?> addDailyReward(@RequestParam(required = true) String id, HttpServletRequest request){
+	public ResponseEntity<?> addDailyReward(@RequestParam String id, HttpServletRequest request){
 	    if (id == null || id.isEmpty()) {
 	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유효하지 않은 사용자 ID입니다.");
 	    }
@@ -179,8 +174,8 @@ public class UserController {
 	    }
 
 	    try {
-	        int result = userService.calculateReward(id, 50);
-	        if (result == 1) {
+	        boolean result = userService.addDailyPoint(id, 50); // 50포인트 추가
+	        if (result) { // 성공 
 	            return ResponseEntity.ok("출석 포인트를 받았습니다.");
 	        } else {
 	            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("출석 포인트 적용 실패");
@@ -189,6 +184,11 @@ public class UserController {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류: " + e.getMessage());
 	    }
 	}
+	
+	
+	
+	
+	
 	
 	private boolean verifyLogin(HttpServletRequest request) {
 		HttpSession session = request.getSession(false);

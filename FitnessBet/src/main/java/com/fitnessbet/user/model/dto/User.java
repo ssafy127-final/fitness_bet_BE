@@ -10,7 +10,7 @@ public class User {
 	private int classNum; // 소속 반
 	private int currentPoint; // 현재 보유 포인트
 	private int totalPoint; // 누적 포인트
-	private Date visited; // 마지막 방문 날짜
+	private String visited; // 마지막 방문 날짜
 	private int gender; // 0 : 여성 / 1 : 남성
 	private int admin; // 0 : 일반 / 1 : 관리자
 	private int randomNum;
@@ -73,11 +73,11 @@ public class User {
 		this.totalPoint = totalPoint;
 	}
 
-	public Date getVisited() {
+	public String getVisited() {
 		return visited;
 	}
 
-	public void setVisited(Date visited) {
+	public void setVisited(String visited) {
 		this.visited = visited;
 	}
 

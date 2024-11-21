@@ -2,7 +2,7 @@ package com.fitnessbet.user.model.dao;
 
 import java.util.List;
 
-
+import com.fitnessbet.user.model.dto.PointHistory;
 import com.fitnessbet.user.model.dto.User;
 
 public interface UserDao {
@@ -32,4 +32,8 @@ public interface UserDao {
 	
 	// 배팅 포인트 걸 때, 현재 보유 포인트에서 배팅 포인트 차감하기
 	public int minusBettingPoint(User user);
+	
+	public int visitedCheck(User user);
+	
+	public int insertPointHistory(PointHistory ph);
 }

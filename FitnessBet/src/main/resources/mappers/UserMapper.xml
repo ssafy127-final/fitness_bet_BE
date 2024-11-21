@@ -65,4 +65,16 @@
 	WHERE id = #{id};
 	</update>
 	
+	<update id = "visitedCheck" parameterType="User">
+	UPDATE user SET visited = CURRENT_DATE()
+	WHERE id = #{id};
+	</update>
+	
+	<insert id= "insertPointHistory" parameterType="PointHistory">
+	INSERT INTO point_history (user_id, product_id, betting_id, category, record_date, point) VALUES
+	(#{userId}, #{productId}, #{bettingId}, #{category}, now(), #{point})
+	</insert>
+	
+	
+	
 </mapper> 
