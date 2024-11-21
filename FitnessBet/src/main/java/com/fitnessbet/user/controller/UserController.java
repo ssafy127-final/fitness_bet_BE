@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -157,18 +158,47 @@ public class UserController {
 	
 	@GetMapping("/autoLogin")
 	public ResponseEntity<?> autoLoginBySessionInfo(HttpServletRequest request, @RequestParam String id) {
+		boolean isLogin = verifyLogin(request);
 		HttpSession session = request.getSession(false);
-		boolean isLogin = false;
-		if (session != null) {
-			isLogin = true;
-		}
 		String userId = (String) session.getAttribute("userId");
 		if (isLogin && userId.equals(id)) {
 			return ResponseEntity.status(HttpStatus.OK).body(userService.getUserById(id));
 		}
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("자동 로그인 실패");
 	}
+	
+	@PostMapping("/daily")
+	public ResponseEntity<?> addDailyReward(@RequestParam(required = true) String id, HttpServletRequest request){
+	    if (id == null || id.isEmpty()) {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유효하지 않은 사용자 ID입니다.");
+	    }
 
+	    boolean isLogin = verifyLogin(request);
+	    if (!isLogin) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+	    }
+
+	    try {
+	        int result = userService.calculateReward(id, 50);
+	        if (result == 1) {
+	            return ResponseEntity.ok("출석 포인트를 받았습니다.");
+	        } else {
+	            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("출석 포인트 적용 실패");
+	        }
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류: " + e.getMessage());
+	    }
+	}
+	
+	private boolean verifyLogin(HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			return true;
+			
+		}return false;
+		
+	}
+	
 	private boolean verifyAdmin(HttpServletRequest request) {
 		HttpSession session = request.getSession(false);
 		if (session == null) {
