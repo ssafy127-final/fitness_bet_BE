@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fitnessbet.user.model.dao.UserDao;
+import com.fitnessbet.user.model.dto.PointHistory;
 import com.fitnessbet.user.model.dto.User;
 
 @Service
@@ -86,7 +87,7 @@ public class UserServiceImpl implements UserService{
 		int afterPoint = beforePoint + reward; // 정산 포인트를 현재 포인트에 합산
 		int afterTotalPoint = beforeTotalPoint + reward; // 정산 포인트 토탈 포인트 합산
 		user.setCurrentPoint(afterPoint); // 유저 객체에 정산된 소유 포인트 저장
-		user.setTotalPoint(afterTotalPoint); // 유저 객체에 정산된 토탈 포인트 저장
+		user.setTotalPoint(afterTotalPoint); // 유저 객체에 정산된 토탈 포인트 저장		
 		return userDao.updateReward(user); // 해당 유저 반환
 	}
 
@@ -100,5 +101,38 @@ public class UserServiceImpl implements UserService{
 		return userDao.minusBettingPoint(user); // dao 호출... 차감된 배팅 포인트를 담은 유저 객체를 파라미터로 줌
 	}
 
+	@Override
+	@Transactional
+	public boolean recordPointHistory(PointHistory ph) {
+		int result = userDao.insertPointHistory(ph);
+		return result == 1;
+	}
+
+	@Override
+	@Transactional
+	public boolean updateVisited(User user) {
+		int result = userDao.visitedCheck(user);
+		return result == 1;
+	}
+
+	@Override
+	public boolean addDailyPoint(String id, int dailyPoint) {
+		User user = userDao.findById(id);
+		int currPoint = user.getCurrentPoint(); // 현재 소유 포인트 꺼내고
+		int afterPoint = currPoint + dailyPoint;
+		user.setCurrentPoint(afterPoint);// 포인트 수정
+		user.setTotalPoint(user.getTotalPoint() + dailyPoint);
+		if (userDao.updateReward(user) > 0 && userDao.visitedCheck(user) > 0) {
+			PointHistory ph = new PointHistory();
+			ph.setCategory(0); // 출석 : 0
+			ph.setUserId(id);
+			ph.setPoint(dailyPoint);
+			return userDao.insertPointHistory(ph) > 0;
+		}
+		return false;
+	}
+	
+	
+	
 
 }
