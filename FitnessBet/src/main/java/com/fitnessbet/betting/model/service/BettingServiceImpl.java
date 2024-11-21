@@ -183,8 +183,12 @@ public class BettingServiceImpl implements BettingService {
 	}
 
 	@Override
-	public Betting getBettingDetail(int bettingId) {
-		return dao.selectOneBettingDetail(bettingId);
+	public Betting getBettingDetail(int bettingId, String id) {
+		Betting betting = dao.selectOneBetting(bettingId);
+		User user = new User();
+		user.setId(id);
+		betting.setLoginUser(user);
+		return dao.selectOneBettingDetail(betting);
 	};
 
 }

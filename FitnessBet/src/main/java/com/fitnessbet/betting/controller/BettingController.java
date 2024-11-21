@@ -90,8 +90,8 @@ public class BettingController {
 	}
 		
 	@GetMapping("/detail/{bettingId}")
-	public ResponseEntity<?> getBettingDetail(@PathVariable("bettingId") int bettingId){
-		Betting betting = service.getBettingDetail(bettingId);
+	public ResponseEntity<?> getBettingDetail(@PathVariable("bettingId") int bettingId, @RequestParam("id") String id){
+		Betting betting = service.getBettingDetail(bettingId, id);
 		if (betting.getId() !=0 ) {
 			return new ResponseEntity<Betting>(betting, HttpStatus.OK);
 		}else {

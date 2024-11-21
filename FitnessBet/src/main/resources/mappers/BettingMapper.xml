@@ -44,9 +44,9 @@
 		    ON M.id = B.mission_id
 		  LEFT OUTER JOIN BETTING_HISTORY BH
 		    ON B.id = BH.betting_id
-		   AND U.id = BH.player
 		 WHERE U.campus = #{loginUser.campus}
 		   AND U.class_num = #{loginUser.classNum}
+		   AND BH.player = #{loginUser.id}
 		   <if test="result == 0">
 		   AND (B.result = 0 OR B.result = 2)
 		   </if>
@@ -54,8 +54,8 @@
 		   AND (B.result = 1 OR B.result = -1)
 		   </if>
 	</select>
-	<select id="selectOneBettingDetail" parameterType="int" resultMap="BettingWithChallengerInfo">
-		SELECT B.id, B.challenger, B.mission_id, B.mission_cnt, B.success_cnt, B.fail_cnt, B.success_point, B.fail_point, B.result, B.reg_date, U.id userid, U.campus, U.class_num, U.name, BH.id historyid, BH.point, BH.choice, M.id missionid, M.content
+	<select id="selectOneBettingDetail" parameterType="Betting" resultMap="BettingWithChallengerInfo">
+		SELECT B.id, B.challenger, B.mission_id, B.mission_cnt, B.success_cnt, B.fail_cnt, B.success_point, B.fail_point, B.result, B.reg_date, U.id userid, U.campus, U.class_num, U.name, BH.id historyid, BH.player, BH.point, BH.choice, M.id missionid, M.content
 		  FROM BETTING B
 		 INNER JOIN USER U
 		    ON B.challenger = U.id
@@ -63,7 +63,8 @@
 		    ON M.id = B.mission_id
 		  LEFT OUTER JOIN BETTING_HISTORY BH
 		    ON B.id = BH.betting_id
-		 WHERE B.id = #{bettingId}
+		 WHERE B.id = #{id}
+		   AND BH.player = #{loginUser.id}
 	</select>
 	<select id="selectOneBetting" parameterType="int" resultType="Betting">
 		SELECT * FROM BETTING WHERE id = #{bettingId}
@@ -120,7 +121,7 @@
 	</select>
 	
 	<select id="selectChallengerBettingHistory" parameterType="String" resultMap="BettingWithChallengerInfo">
-		SELECT B.id, B.challenger, B.mission_id, B.mission_cnt, B.success_cnt, B.fail_cnt, B.success_point, B.fail_point, B.result, B.reg_date, U.id userid, U.campus, U.class_num, U.name, BH.id historyid, BH.point, BH.choice, M.id missionid, M.content
+		SELECT B.id, B.challenger, B.mission_id, B.mission_cnt, B.success_cnt, B.fail_cnt, B.success_point, B.fail_point, B.result, B.reg_date, U.id userid, U.campus, U.class_num, U.name, BH.id historyid, BH.player ,BH.point, BH.choice, M.id missionid, M.content
 		  FROM BETTING B
 		 INNER JOIN USER U
 		    ON B.challenger = U.id

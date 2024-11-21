@@ -40,6 +40,6 @@ public interface BettingService {
 
 	List<Mission> getMissionList();
 
-	Betting getBettingDetail(int bettingId);
+	Betting getBettingDetail(int bettingId, String id);
 
 }
