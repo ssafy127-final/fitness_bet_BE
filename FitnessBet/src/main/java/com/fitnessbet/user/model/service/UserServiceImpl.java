@@ -131,6 +131,11 @@ public class UserServiceImpl implements UserService{
 		}
 		return false;
 	}
+
+	@Override
+	public List<PointHistory> getPointHistoryList(String userId) {
+		return userDao.selectAllPointHistory(userId);
+	}
 	
 	
 	
