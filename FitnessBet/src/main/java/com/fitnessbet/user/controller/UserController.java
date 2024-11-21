@@ -154,7 +154,7 @@ public class UserController {
 		// 결과 값이 없다면 중복이 아니다.
 		return ResponseEntity.status(HttpStatus.OK).body("확인되었습니다.");
 	}
-
+	
 	@GetMapping("/autoLogin")
 	public ResponseEntity<?> autoLoginBySessionInfo(HttpServletRequest request, @RequestParam String id) {
 		HttpSession session = request.getSession(false);
