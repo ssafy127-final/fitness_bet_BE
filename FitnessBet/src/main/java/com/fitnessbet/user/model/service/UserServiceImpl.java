@@ -88,7 +88,15 @@ public class UserServiceImpl implements UserService{
 		int afterTotalPoint = beforeTotalPoint + reward; // 정산 포인트 토탈 포인트 합산
 		user.setCurrentPoint(afterPoint); // 유저 객체에 정산된 소유 포인트 저장
 		user.setTotalPoint(afterTotalPoint); // 유저 객체에 정산된 토탈 포인트 저장		
-		return userDao.updateReward(user); // 해당 유저 반환
+		int result = userDao.updateReward(user); // 해당 유저 반환
+		if(result == 1) {
+			PointHistory ph = new PointHistory();
+			ph.setCategory(1); // 1 : 배팅 성공 카테고리
+			ph.setUserId(id);
+			ph.setPoint(reward);
+			return userDao.insertPointHistory(ph);
+		}
+		return 0;
 	}
 
 	@Override
@@ -98,7 +106,15 @@ public class UserServiceImpl implements UserService{
 		int currPoint = user.getCurrentPoint(); // 현재 소유 포인트 꺼내고
 		int minusBetPoint = currPoint - betPoint; // 배팅에 건 포인트 차감 시키고
 		user.setCurrentPoint(minusBetPoint); // 유저 객체에 저장
-		return userDao.minusBettingPoint(user); // dao 호출... 차감된 배팅 포인트를 담은 유저 객체를 파라미터로 줌
+		int result = userDao.minusBettingPoint(user); // dao 호출... 차감된 배팅 포인트를 담은 유저 객체를 파라미터로 줌
+		if(result == 1) {
+			PointHistory ph = new PointHistory();
+			ph.setCategory(2); // 2 : 배팅 차감 카테고리 번호
+			ph.setUserId(id);
+			ph.setPoint(betPoint);
+			return userDao.insertPointHistory(ph);
+		}
+		return 0;
 	}
 
 	@Override
@@ -116,6 +132,7 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
+	@Transactional
 	public boolean addDailyPoint(String id, int dailyPoint) {
 		User user = userDao.findById(id);
 		int currPoint = user.getCurrentPoint(); // 현재 소유 포인트 꺼내고
