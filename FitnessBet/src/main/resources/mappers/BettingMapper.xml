@@ -44,9 +44,9 @@
 		    ON M.id = B.mission_id
 		  LEFT OUTER JOIN BETTING_HISTORY BH
 		    ON B.id = BH.betting_id
+		   AND BH.player = #{loginUser.id}
 		 WHERE U.campus = #{loginUser.campus}
 		   AND U.class_num = #{loginUser.classNum}
-		   AND BH.player = #{loginUser.id}
 		   <if test="result == 0">
 		   AND (B.result = 0 OR B.result = 2)
 		   </if>
@@ -63,8 +63,8 @@
 		    ON M.id = B.mission_id
 		  LEFT OUTER JOIN BETTING_HISTORY BH
 		    ON B.id = BH.betting_id
-		 WHERE B.id = #{id}
 		   AND BH.player = #{loginUser.id}
+		 WHERE B.id = #{id}
 	</select>
 	<select id="selectOneBetting" parameterType="int" resultType="Betting">
 		SELECT * FROM BETTING WHERE id = #{bettingId}
