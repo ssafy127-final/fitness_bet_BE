@@ -76,8 +76,8 @@
 	</insert>
 	
 	<insert id="addBetHistory" parameterType="BettingHistory">
-		INSERT INTO BETTING_HISTORY (betting_id, player, point, choice)
-		VALUES (#{bettingId}, #{player}, #{point}, #{choice})
+		INSERT INTO BETTING_HISTORY (betting_id, player, point, choice, prize)
+		VALUES (#{bettingId}, #{player}, #{point}, #{choice}, 0 - #{point})
 	</insert>
 	
 	<update id="joinBetting" parameterType="Betting">
