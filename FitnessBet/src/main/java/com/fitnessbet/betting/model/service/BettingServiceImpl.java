@@ -85,12 +85,17 @@ public class BettingServiceImpl implements BettingService {
 			for (BettingHistory info : winUsers) {
 				if(betInfo.getResult()==1) {
 					totalPoint = (int) Math.ceil(totalPoint / (betInfo.getSuccessPoint()/info.getPoint()));
+											//                                     총 성공 포인트 / 유저가 배팅한 포인트
+					System.out.println("미션 성공 ! " + "유저 : " + info.getPlayer() + "배팅한 포인트" + info.getPoint()
+					+ " 얻은 포인트 " + totalPoint + "유저의 선택 " + info.getChoice());
 				}else {
 					totalPoint = (int) Math.ceil(totalPoint / (betInfo.getFailPoint()/info.getPoint()));
+					System.out.println("미션 실패 ! " + "유저 : " + info.getPlayer() + "배팅한 포인트" + info.getPoint()
+					+ " 얻은 포인트 " + totalPoint + "유저의 선택 " + info.getChoice());
 				}
 				info.setPrize(totalPoint);
 				if(dao.updateBettingHistoryPrize(info)) {
-					successCnt += userService.calculateReward(info.getPlayer(),totalPoint);
+					successCnt += userService.calculateReward(info.getPlayer(),totalPoint, betting.getId());
 					
 				}
 			}
@@ -188,6 +193,19 @@ public class BettingServiceImpl implements BettingService {
 		user.setId(id);
 		betting.setLoginUser(user);
 		return dao.selectOneBettingDetail(betting);
+	}
+
+	@Override
+	public int getNetProfit(String id, int bettingId) {
+		// bh의 player와 bh의 배팅아이디를 담은 객체를
+		BettingHistory tmpBh = new BettingHistory();
+		tmpBh.setPlayer(id);
+		tmpBh.setBettingId(bettingId);
+		BettingHistory bh = dao.selectPrizeAndPointById(tmpBh);
+		System.out.println(bh.getPrize());
+		System.out.println(bh.getPoint());
+		int netProfit = bh.getPrize() - bh.getPoint();
+		return netProfit;
 	};
 
 }

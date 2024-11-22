@@ -41,5 +41,7 @@ public interface BettingDao {
 	Betting selectOneBetting(int id);
 
 	boolean updateBettingHistoryPrize(BettingHistory info);
+	
+	BettingHistory selectPrizeAndPointById(BettingHistory bettingInfo);
 
 }
