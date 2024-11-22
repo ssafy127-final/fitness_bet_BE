@@ -2,9 +2,12 @@ package com.fitnessbet.user.model.service;
 
 import java.util.List;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fitnessbet.betting.model.dao.BettingDao;
+import com.fitnessbet.betting.model.service.BettingService;
 import com.fitnessbet.user.model.dao.UserDao;
 import com.fitnessbet.user.model.dto.PointHistory;
 import com.fitnessbet.user.model.dto.User;
@@ -13,9 +16,12 @@ import com.fitnessbet.user.model.dto.User;
 public class UserServiceImpl implements UserService{
 	
 	private final UserDao userDao;
+
+	private final BettingService bettingService;
 	
-	public UserServiceImpl(UserDao userDao) {
+	public UserServiceImpl(UserDao userDao, @Lazy BettingService bettingService) {
 		this.userDao = userDao;
+		this.bettingService = bettingService;
 	}
 	
 	@Override
@@ -80,12 +86,14 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	@Transactional
-	public int calculateReward(String id, int reward) {
+	public int calculateReward(String id, int reward, int bettingId) {
 		User user = userDao.findById(id); // 해당 id 유저를 찾아와서
 		int beforeTotalPoint = user.getTotalPoint(); // 현재 토탈 포인트와
 		int beforePoint = user.getCurrentPoint(); // 현재 가지고 있는 포인트를 꺼냄
+		int netProfit = bettingService.getNetProfit(id, bettingId);
+		System.out.println(netProfit);
 		int afterPoint = beforePoint + reward; // 정산 포인트를 현재 포인트에 합산
-		int afterTotalPoint = beforeTotalPoint + reward; // 정산 포인트 토탈 포인트 합산
+		int afterTotalPoint = beforeTotalPoint + netProfit; // 배팅 포인트를 제외한 순수익 포인트를 토탈 포인트에 저장
 		user.setCurrentPoint(afterPoint); // 유저 객체에 정산된 소유 포인트 저장
 		user.setTotalPoint(afterTotalPoint); // 유저 객체에 정산된 토탈 포인트 저장		
 		int result = userDao.updateReward(user); // 해당 유저 반환
@@ -111,7 +119,7 @@ public class UserServiceImpl implements UserService{
 			PointHistory ph = new PointHistory();
 			ph.setCategory(2); // 2 : 배팅 차감 카테고리 번호
 			ph.setUserId(id);
-			ph.setPoint(betPoint);
+			ph.setPoint(-betPoint);
 			return userDao.insertPointHistory(ph);
 		}
 		return 0;
@@ -161,7 +169,6 @@ public class UserServiceImpl implements UserService{
 		System.out.println(list);
 		return userDao.selectWinCnt(user);
 	}
-	
 	
 	
 

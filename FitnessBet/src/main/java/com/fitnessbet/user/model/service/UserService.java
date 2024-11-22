@@ -23,7 +23,7 @@ public interface UserService {
 	
 	public User selectChallenger(User user);
 	
-	public int calculateReward(String id, int reward);
+	public int calculateReward(String id, int reward, int bettingId);
 	
 	public int minusBetPoint(String id, int betPoint);
 	

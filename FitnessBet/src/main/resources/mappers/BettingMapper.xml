@@ -159,4 +159,8 @@
 		UPDATE BETTING_HISTORY SET prize = #{prize} WHERE id = #{id}
 	</update>
 	
+	<select id = "selectPrizeAndPointById" parameterType="BettingHistory" resultType="BettingHistory">
+		SELECT BH.prize, BH.player, BH.point FROM BETTING_HISTORY BH
+		WHERE BH.player = #{player} AND BH.betting_id = #{bettingId};
+	</select>
 </mapper>

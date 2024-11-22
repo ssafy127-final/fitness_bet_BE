@@ -41,5 +41,7 @@ public interface BettingService {
 	List<Mission> getMissionList();
 
 	Betting getBettingDetail(int bettingId, String id);
+	
+	int getNetProfit(String id, int bettingId);
 
 }
