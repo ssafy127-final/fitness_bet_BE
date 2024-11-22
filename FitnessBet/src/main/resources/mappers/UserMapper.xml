@@ -81,18 +81,18 @@
 	
 	<select id = "selectWinCnt" parameterType="User" resultType="User">
 	SELECT 
-    u.id,
-    u.name,
-    COUNT(bh.id) AS totalGames,
-    SUM(CASE WHEN bh.choice = b.result THEN 1 ELSE 0 END) AS winGames,
-    u.total_point as totalPoint,
-    u.current_point as currentPoint
-	FROM betting_history bh
-	INNER JOIN user u ON 
-	bh.player = u.id
-	LEFT JOIN betting b 
-	ON bh.betting_id = b.id
-	WHERE u.campus = #{campus} AND u.class_num = #{classNum} AND b.result IN ( -1, 1 )
+		u.id,
+		u.name, 
+		count(bh.player) AS totalGames, 
+		sum(CASE WHEN bh.choice = b.result THEN 1 ELSE 0 END) AS winGames, 
+		u.total_point AS totalPoint, 
+		u.current_point AS currentPoint
+	FROM user u
+	LEFT JOIN betting_history bh
+	ON bh.player =u.id
+	LEFT JOIN betting b
+	ON b.id = bh.betting_id AND b.result IN (1, -1)
+	WHERE u.campus = #{campus} AND u.class_num = #{classNum}
 	GROUP BY u.id;
 	</select>
 	

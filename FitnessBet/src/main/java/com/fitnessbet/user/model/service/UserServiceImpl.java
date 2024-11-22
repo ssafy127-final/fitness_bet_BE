@@ -170,6 +170,27 @@ public class UserServiceImpl implements UserService{
 		return userDao.selectWinCnt(user);
 	}
 	
+	@Override
+	@Transactional
+	public boolean exchangeProduct(PointHistory ph) {
+		String userId = ph.getUserId();
+		int point = ph.getPoint();
+		ph.setCategory(3); // 카테고리 3 : 상품 구매  
+		
+		User user = userDao.findById(userId);
+		int currentPoint = user.getCurrentPoint();
+		int afterPoint = currentPoint - point;
+		user.setCurrentPoint(afterPoint); 
+		int result = userDao.minusBettingPoint(user); // 포인트 삭감 진행
+		ph.setPoint(-point);
+		if(result == 1) {
+			if(userDao.insertPointHistory(ph) > 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	
 
 }
