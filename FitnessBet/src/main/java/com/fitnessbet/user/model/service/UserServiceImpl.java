@@ -153,6 +153,14 @@ public class UserServiceImpl implements UserService{
 	public List<PointHistory> getPointHistoryList(String userId) {
 		return userDao.selectAllPointHistory(userId);
 	}
+
+	@Override
+	public List<User> getWinningPercentList(String id) {
+		User user = userDao.findById(id);
+		List<User> list = userDao.selectWinCnt(user);
+		System.out.println(list);
+		return userDao.selectWinCnt(user);
+	}
 	
 	
 	

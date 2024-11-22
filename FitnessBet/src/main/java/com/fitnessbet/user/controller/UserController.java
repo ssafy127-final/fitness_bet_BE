@@ -193,6 +193,15 @@ public class UserController {
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 	
+	@GetMapping("/ranking")
+	public ResponseEntity<?> getRankingList(@RequestParam("userId") String id){
+		List<User> rankingList = userService.getWinningPercentList(id);
+		if(rankingList!=null && rankingList.size()>0) {
+			return new ResponseEntity<List<User>>(rankingList, HttpStatus.OK);
+		}
+		return new ResponseEntity<>("집계가 없습니다.",HttpStatus.NO_CONTENT);
+	}
+	
 	
 	
 	

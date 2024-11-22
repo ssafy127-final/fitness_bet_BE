@@ -33,9 +33,15 @@ public interface UserDao {
 	// 배팅 포인트 걸 때, 현재 보유 포인트에서 배팅 포인트 차감하기
 	public int minusBettingPoint(User user);
 	
+	// 출석체크
 	public int visitedCheck(User user);
 	
+	// 포인트 내역 기록
 	public int insertPointHistory(PointHistory ph);
 
+	// 포인트 내역 가져오기
 	public List<PointHistory> selectAllPointHistory(String userId);
+	
+	// 해당 유저가 속한 반 사람들의 승률 리스트 가져오기 
+	public List<User> selectWinCnt(User user);
 }
