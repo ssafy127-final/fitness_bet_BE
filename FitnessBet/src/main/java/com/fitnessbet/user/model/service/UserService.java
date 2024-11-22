@@ -34,4 +34,6 @@ public interface UserService {
 	public boolean addDailyPoint(String id, int dailyPoint);
 
 	public List<PointHistory> getPointHistoryList(String userId);
+
+	public List<User> getWinningPercentList(String id);
 }

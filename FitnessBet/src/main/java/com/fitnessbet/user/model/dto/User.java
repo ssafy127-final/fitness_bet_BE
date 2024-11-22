@@ -16,6 +16,8 @@ public class User {
 	private int randomNum;
 	private int accept; // 0 : 가입 대기중 / 1: 가입 승인 완
 	private String phone; // 전화번호
+	private int totalGames;
+	private int winGames;
 
 	public String getId() {
 		return id;
@@ -120,13 +122,31 @@ public class User {
 	public void setRandomNum(int randomNum) {
 		this.randomNum = randomNum;
 	}
+	
+	public int getTotalGames() {
+		return totalGames;
+	}
+
+	public void setTotalGames(int totalGames) {
+		this.totalGames = totalGames;
+	}
+
+	public int getWinGames() {
+		return winGames;
+	}
+
+	public void setWinGames(int winGames) {
+		this.winGames = winGames;
+	}
 
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", pw=" + pw + ", name=" + name + ", campus=" + campus + ", classNum=" + classNum
 				+ ", currentPoint=" + currentPoint + ", totalPoint=" + totalPoint + ", visited=" + visited + ", gender="
 				+ gender + ", admin=" + admin + ", randomNum=" + randomNum + ", accept=" + accept + ", phone=" + phone
-				+ "]";
+				+ ", totalGames=" + totalGames + ", winGames=" + winGames + "]";
 	}
+
+	
 
 }
