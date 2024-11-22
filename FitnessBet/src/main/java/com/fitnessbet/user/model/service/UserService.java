@@ -36,4 +36,6 @@ public interface UserService {
 	public List<PointHistory> getPointHistoryList(String userId);
 
 	public List<User> getWinningPercentList(String id);
+	
+	public boolean exchangeProduct(PointHistory ph);
 }
