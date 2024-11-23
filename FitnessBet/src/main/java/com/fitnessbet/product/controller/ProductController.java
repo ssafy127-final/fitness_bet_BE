@@ -60,5 +60,15 @@ public class ProductController {
 		}
 		return new ResponseEntity<String>("교환 실패", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+	
+	@GetMapping("/exchange/history")
+	public ResponseEntity<?> getAllExchangList(){
+		List<PointHistory> list =  service.getAllExchangList();
+		if(list.size()>0 && list != null) {
+			return new ResponseEntity<List<PointHistory>>(list, HttpStatus.OK);
+			
+		}
+		return new ResponseEntity<String>("교환 목록이 존재하지 않습니다.", HttpStatus.NO_CONTENT);
+	}
 
 }
