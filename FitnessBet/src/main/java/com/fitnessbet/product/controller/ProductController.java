@@ -21,15 +21,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fitnessbet.product.model.dto.DateFilter;
 import com.fitnessbet.product.model.dto.Product;
 import com.fitnessbet.product.model.service.ProductService;
 import com.fitnessbet.user.model.dto.PointHistory;
+import com.fitnessbet.user.model.dto.User;
+import com.fitnessbet.user.model.service.UserService;
 
 import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/product")
@@ -37,9 +42,11 @@ import jakarta.servlet.http.HttpServletResponse;
 public class ProductController {
 	
 	private final ProductService service;
+	private final UserService userService;
 	
-	public ProductController(ProductService service) {
+	public ProductController(ProductService service, UserService userService) {
 		this.service = service;
+		this.userService = userService;
 	}
 	
 	@GetMapping("")
@@ -77,7 +84,11 @@ public class ProductController {
 	}
 	
 	@GetMapping("/exchange/history")
-	public ResponseEntity<?> getAllExchangList(@ModelAttribute DateFilter date){
+	public ResponseEntity<?> getAllExchangList(HttpServletRequest request, @ModelAttribute DateFilter date){
+		HttpSession session = request.getSession(false);
+		String userId = (String) session.getAttribute("userId");
+		User userInfo = userService.getUserById(userId);
+		date.setUserInfo(userInfo);
 		List<PointHistory> list =  service.getAllExchangList(date);
 		if(list.size()>0 && list != null) {
 			return new ResponseEntity<List<PointHistory>>(list, HttpStatus.OK);
@@ -87,7 +98,13 @@ public class ProductController {
 	}
 	
 	@GetMapping("/download")
-	public void download(HttpServletResponse res, @ModelAttribute DateFilter date) throws Exception {
+	public void download(HttpServletRequest request ,HttpServletResponse res, @ModelAttribute DateFilter date) throws Exception {
+		
+		HttpSession session = request.getSession(false);
+		String userId = (String) session.getAttribute("userId");
+		User userInfo = userService.getUserById(userId);
+		date.setUserInfo(userInfo);
+		
 	    Workbook workbook = new XSSFWorkbook();
 	    try {
 	        // Excel Sheet 생성 및 데이터 작성
@@ -110,6 +127,7 @@ public class ProductController {
 	            cell.setCellValue(headers[i]);
 	            cell.setCellStyle(headerStyle);
 	        }
+	        
 
 	        // Body 데이터 추가
 	        List<PointHistory> list = service.getAllExchangList(date);
