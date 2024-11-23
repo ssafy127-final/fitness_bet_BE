@@ -15,4 +15,6 @@ public interface ProductService {
 
 	boolean exchangeProduct(PointHistory info);
 
+	List<PointHistory> getAllExchangList();
+
 }

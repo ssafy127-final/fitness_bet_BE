@@ -50,6 +50,11 @@ public class ProductServiceImpl implements ProductService{
 	public boolean exchangeProduct(PointHistory info) {
 		return userService.exchangeProduct(info);
 	}
+
+	@Override
+	public List<PointHistory> getAllExchangList() {
+		return dao.selectAllExchangeList();
+	}
 	
 
 

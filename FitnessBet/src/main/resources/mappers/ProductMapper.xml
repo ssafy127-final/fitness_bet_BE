@@ -3,13 +3,13 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.fitnessbet.product.model.dao.Product">
+<mapper namespace="com.fitnessbet.product.model.dao.ProductDao">
 
 	<select id="selectAllProduct" resultType="Product">
 		SELECT * FROM PRODUCT WHERE del_yn = 0;
 	</select>
 	
-	<select id="selectOneProductById">
+	<select id="selectOneProductById" resultType="Product">
 		SELECT * FROM PRODUCT WHERE id = #{id}
 	</select>
 	
@@ -18,7 +18,17 @@
 		VALUES (#{name}, #{price}, #{img}, #{point})
 	</insert>
 	
-	<update id="updateProduct">
+	<update id="updateProduct" parameterType="Product">
 		UPDATE PRODUCT SET img = #{img}, name = #{name}, point = #{point}, price = #{price}, del_yn = #{delYn} WHERE id = #{id}
 	</update>
+	
+	<select id="selectAllExchangeList" resultType="PointHistory">
+		SELECT PH.id, PH.user_id, PH.product_id, PH.record_date, PH.point, U.name user_name, U.class_num user_class, U.campus user_campus, P.name Product_name
+		  FROM POINT_HISTORY PH
+		 INNER JOIN USER U
+		    ON U.id = PH.user_id
+		 INNER JOIN PRODUCT P
+		    ON P.id = PH.product_id
+	     WHERE PH.category = 3
+	</select>
 </mapper>

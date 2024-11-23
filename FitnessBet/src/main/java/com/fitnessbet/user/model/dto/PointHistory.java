@@ -11,6 +11,36 @@ public class PointHistory {
 	private Date recordDate;
 	private int point;
 	
+	private String userName;
+	private String ProductName;
+	private String userCampus;
+	private String userClass;
+	
+	
+	public String getUserCampus() {
+		return userCampus;
+	}
+	public void setUserCampus(String userCampus) {
+		this.userCampus = userCampus;
+	}
+	public String getUserClass() {
+		return userClass;
+	}
+	public void setUserClass(String userClass) {
+		this.userClass = userClass;
+	}
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	public String getProductName() {
+		return ProductName;
+	}
+	public void setProductName(String productName) {
+		ProductName = productName;
+	}
 	public int getId() {
 		return id;
 	}
