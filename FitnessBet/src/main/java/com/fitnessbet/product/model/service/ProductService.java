@@ -2,6 +2,7 @@ package com.fitnessbet.product.model.service;
 
 import java.util.List;
 
+import com.fitnessbet.product.model.dto.DateFilter;
 import com.fitnessbet.product.model.dto.Product;
 import com.fitnessbet.user.model.dto.PointHistory;
 
@@ -15,6 +16,6 @@ public interface ProductService {
 
 	boolean exchangeProduct(PointHistory info);
 
-	List<PointHistory> getAllExchangList();
+	List<PointHistory> getAllExchangList(DateFilter date);
 
 }

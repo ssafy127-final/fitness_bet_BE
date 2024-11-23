@@ -4,6 +4,12 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.fitnessbet.product.model.dao.ProductDao">
+<resultMap type="PointHistory" id="PoingHistoryWithUserInfo" autoMapping="true">
+	<id property="id" column="id"/>
+	<association property="userInfo" javaType="User" autoMapping="true">
+		<id property="id" column="userid"/>
+	</association>
+</resultMap>
 
 	<select id="selectAllProduct" resultType="Product">
 		SELECT * FROM PRODUCT WHERE del_yn = 0;
@@ -22,13 +28,17 @@
 		UPDATE PRODUCT SET img = #{img}, name = #{name}, point = #{point}, price = #{price}, del_yn = #{delYn} WHERE id = #{id}
 	</update>
 	
-	<select id="selectAllExchangeList" resultType="PointHistory">
-		SELECT PH.id, PH.user_id, PH.product_id, PH.record_date, PH.point, U.name user_name, U.class_num user_class, U.campus user_campus, P.name Product_name
+	<select id="selectAllExchangeList" resultMap="PoingHistoryWithUserInfo" parameterType="DateFilter">
+		SELECT PH.id, PH.user_id, PH.product_id, PH.record_date, PH.point, U.id userid, U.name, U.phone, U.class_num, U.campus, P.name Product_name
 		  FROM POINT_HISTORY PH
 		 INNER JOIN USER U
 		    ON U.id = PH.user_id
 		 INNER JOIN PRODUCT P
 		    ON P.id = PH.product_id
 	     WHERE PH.category = 3
+	     <if test="from != null and to != null">
+	       AND PH.record_date >= #{from}
+	       AND PH.record_date &lt;= #{to}
+	     </if>
 	</select>
 </mapper>

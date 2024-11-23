@@ -6,12 +6,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fitnessbet.product.model.dto.DateFilter;
 import com.fitnessbet.product.model.dto.Product;
 import com.fitnessbet.product.model.service.ProductService;
 import com.fitnessbet.user.model.dto.PointHistory;
@@ -62,8 +64,8 @@ public class ProductController {
 	}
 	
 	@GetMapping("/exchange/history")
-	public ResponseEntity<?> getAllExchangList(){
-		List<PointHistory> list =  service.getAllExchangList();
+	public ResponseEntity<?> getAllExchangList(@ModelAttribute DateFilter date){
+		List<PointHistory> list =  service.getAllExchangList(date);
 		if(list.size()>0 && list != null) {
 			return new ResponseEntity<List<PointHistory>>(list, HttpStatus.OK);
 			
