@@ -40,5 +40,9 @@
 	       AND PH.record_date >= #{from}
 	       AND PH.record_date &lt;= #{to}
 	     </if>
+	     <if test="userInfo!=null and userInfo.id != 'admin'">
+     	   AND U.campus = #{userInfo.campus}
+	       AND U.class_num = #{userInfo.classNum}
+	     </if>
 	</select>
 </mapper>
