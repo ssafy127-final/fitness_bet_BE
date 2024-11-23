@@ -2,6 +2,7 @@ package com.fitnessbet.product.model.dao;
 
 import java.util.List;
 
+import com.fitnessbet.product.model.dto.DateFilter;
 import com.fitnessbet.product.model.dto.Product;
 import com.fitnessbet.user.model.dto.PointHistory;
 
@@ -15,7 +16,6 @@ public interface ProductDao {
 
 	boolean updateProduct(Product origin);
 
-	List<PointHistory> selectAllExchangeList();
-
+	List<PointHistory> selectAllExchangeList(DateFilter date);
 
 }

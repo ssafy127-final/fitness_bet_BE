@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fitnessbet.product.model.dao.ProductDao;
+import com.fitnessbet.product.model.dto.DateFilter;
 import com.fitnessbet.product.model.dto.Product;
 import com.fitnessbet.user.model.dto.PointHistory;
 import com.fitnessbet.user.model.service.UserService;
@@ -52,8 +53,8 @@ public class ProductServiceImpl implements ProductService{
 	}
 
 	@Override
-	public List<PointHistory> getAllExchangList() {
-		return dao.selectAllExchangeList();
+	public List<PointHistory> getAllExchangList(DateFilter date) {
+		return dao.selectAllExchangeList(date);
 	}
 	
 
