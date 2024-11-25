@@ -49,7 +49,7 @@ public class BettingServiceImpl implements BettingService {
 		Betting newBetting = new Betting();
 
 		Mission mission = missionService.getMissionByIndex();
-		
+
 		User user = userService.getUserById(id);
 
 		User challenger = userService.selectChallenger(user);
@@ -66,10 +66,11 @@ public class BettingServiceImpl implements BettingService {
 		}
 		return newBetting;
 	}
+
 	@Override
 	@Transactional
 	public boolean createBetting(Betting betting) {
-		
+
 		return dao.insertBetting(betting) > 0;
 	}
 
@@ -78,25 +79,34 @@ public class BettingServiceImpl implements BettingService {
 	public boolean finishBetting(Betting betting) {
 		if (dao.finishBetting(betting) > 0) {
 			Betting betInfo = dao.selectOneBetting(betting.getId());
+			System.out.println("미션 챌린저의 학번 : " + betInfo.getChallenger());
+			int challengeReward = 0;
+			String challengerId = betInfo.getChallenger();
+			if (betInfo.getResult() == 1) { // 성공이라면 미션참여보상 70포인트
+				challengeReward = 70;
+			} else if (betInfo.getResult() == -1) { // 실패는 미션참여보상 50포인트
+				challengeReward = 50;
+			}
+			userService.addChallengePoint(challengerId, challengeReward);
 			List<BettingHistory> winUsers = dao.selectWinner(betInfo);
 			// 포인트 정산
 			int totalPoint = betInfo.getFailPoint() + betInfo.getSuccessPoint();
 			int successCnt = 0;
 			for (BettingHistory info : winUsers) {
-				if(betInfo.getResult()==1) {
-					totalPoint = (int) Math.ceil(totalPoint / (betInfo.getSuccessPoint()/info.getPoint()));
-											//                                     총 성공 포인트 / 유저가 배팅한 포인트
+				if (betInfo.getResult() == 1) {
+					totalPoint = (int) Math.ceil(totalPoint / (betInfo.getSuccessPoint() / info.getPoint()));
+					// 총 성공 포인트 / 유저가 배팅한 포인트
 					System.out.println("미션 성공 ! " + "유저 : " + info.getPlayer() + "배팅한 포인트" + info.getPoint()
-					+ " 얻은 포인트 " + totalPoint + "유저의 선택 " + info.getChoice());
-				}else {
-					totalPoint = (int) Math.ceil(totalPoint / (betInfo.getFailPoint()/info.getPoint()));
+							+ " 얻은 포인트 " + totalPoint + "유저의 선택 " + info.getChoice());
+				} else {
+					totalPoint = (int) Math.ceil(totalPoint / (betInfo.getFailPoint() / info.getPoint()));
 					System.out.println("미션 실패 ! " + "유저 : " + info.getPlayer() + "배팅한 포인트" + info.getPoint()
-					+ " 얻은 포인트 " + totalPoint + "유저의 선택 " + info.getChoice());
+							+ " 얻은 포인트 " + totalPoint + "유저의 선택 " + info.getChoice());
 				}
 				info.setPrize(totalPoint);
-				if(dao.updateBettingHistoryPrize(info)) {
-					successCnt += userService.calculateReward(info.getPlayer(),totalPoint, betting.getId());
-					
+				if (dao.updateBettingHistoryPrize(info)) {
+					successCnt += userService.calculateReward(info.getPlayer(), totalPoint, betting.getId());
+
 				}
 			}
 			if (successCnt == winUsers.size())
@@ -108,10 +118,10 @@ public class BettingServiceImpl implements BettingService {
 	@Override
 	@Transactional
 	public boolean joinBetting(BettingHistory bettingInfo) {
-		System.out.println(bettingInfo.getBettingId()+"!!!!! id");
+		System.out.println(bettingInfo.getBettingId() + "!!!!! id");
 		// 참여 유저 포인트 감소시키기
 		if (userService.minusBetPoint(bettingInfo.getPlayer(), bettingInfo.getPoint()) > 0) {
-			
+
 			if (dao.addBetHistory(bettingInfo) > 0) {
 				Betting betting = dao.selectOneBettingById(bettingInfo.getBettingId());
 				if (bettingInfo.getChoice() == 1) { // 성공선택
