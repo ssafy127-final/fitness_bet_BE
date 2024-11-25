@@ -79,7 +79,6 @@ public class BettingServiceImpl implements BettingService {
 	public boolean finishBetting(Betting betting) {
 		if (dao.finishBetting(betting) > 0) {
 			Betting betInfo = dao.selectOneBetting(betting.getId());
-			System.out.println("미션 챌린저의 학번 : " + betInfo.getChallenger());
 			int challengeReward = 0;
 			String challengerId = betInfo.getChallenger();
 			if (betInfo.getResult() == 1) { // 성공이라면 미션참여보상 70포인트
