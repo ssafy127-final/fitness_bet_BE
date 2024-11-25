@@ -95,7 +95,5 @@
 	WHERE u.campus = #{campus} AND u.class_num = #{classNum}
 	GROUP BY u.id;
 	</select>
-	
-	
-	
+		
 </mapper> 

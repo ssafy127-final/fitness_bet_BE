@@ -188,6 +188,24 @@ public class UserServiceImpl implements UserService{
 		}
 		return false;
 	}
+
+	@Override
+	public boolean addChallengePoint(String id, int challengePoint) {
+		User user = userDao.findById(id);
+		int currentPoint = user.getCurrentPoint();
+		int totalPoint = user.getTotalPoint();
+		
+		user.setCurrentPoint(currentPoint + challengePoint);
+		user.setTotalPoint(totalPoint + challengePoint);
+		if(userDao.updateReward(user) == 1) {
+			PointHistory ph = new PointHistory();
+			ph.setCategory(4); // 카테고리 4 : 미션 챌린지 포인트
+			ph.setUserId(id);
+			ph.setPoint(challengePoint);
+			return userDao.insertPointHistory(ph) == 1;
+		}
+		return false;
+	}
 	
 	
 

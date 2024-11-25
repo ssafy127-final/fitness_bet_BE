@@ -38,4 +38,6 @@ public interface UserService {
 	public List<User> getWinningPercentList(String id);
 	
 	public boolean exchangeProduct(PointHistory ph);
+	
+	public boolean addChallengePoint(String id, int challengePoint);
 }
