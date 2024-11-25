@@ -83,7 +83,7 @@
 	SELECT 
 		u.id,
 		u.name, 
-		count(bh.player) AS totalGames, 
+		count(b.result IN (1,-1)) AS totalGames, 
 		sum(CASE WHEN bh.choice = b.result THEN 1 ELSE 0 END) AS winGames, 
 		u.total_point AS totalPoint, 
 		u.current_point AS currentPoint

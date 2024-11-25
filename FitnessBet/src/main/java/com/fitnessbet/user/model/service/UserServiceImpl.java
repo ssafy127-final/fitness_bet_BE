@@ -91,7 +91,6 @@ public class UserServiceImpl implements UserService{
 		int beforeTotalPoint = user.getTotalPoint(); // 현재 토탈 포인트와
 		int beforePoint = user.getCurrentPoint(); // 현재 가지고 있는 포인트를 꺼냄
 		int netProfit = bettingService.getNetProfit(id, bettingId);
-		System.out.println(netProfit);
 		int afterPoint = beforePoint + reward; // 정산 포인트를 현재 포인트에 합산
 		int afterTotalPoint = beforeTotalPoint + netProfit; // 배팅 포인트를 제외한 순수익 포인트를 토탈 포인트에 저장
 		user.setCurrentPoint(afterPoint); // 유저 객체에 정산된 소유 포인트 저장
@@ -166,8 +165,7 @@ public class UserServiceImpl implements UserService{
 	public List<User> getWinningPercentList(String id) {
 		User user = userDao.findById(id);
 		List<User> list = userDao.selectWinCnt(user);
-		System.out.println(list);
-		return userDao.selectWinCnt(user);
+		return list;
 	}
 	
 	@Override
