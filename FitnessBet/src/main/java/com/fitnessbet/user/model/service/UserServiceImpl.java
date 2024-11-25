@@ -190,6 +190,7 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
+	@Transactional
 	public boolean addChallengePoint(String id, int challengePoint) {
 		User user = userDao.findById(id);
 		int currentPoint = user.getCurrentPoint();
