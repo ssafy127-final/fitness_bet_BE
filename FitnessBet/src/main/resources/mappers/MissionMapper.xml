@@ -6,17 +6,17 @@
 <mapper namespace="com.fitnessbet.mission.model.dao.MissionDao">
 
 	<insert id="insertMission" parameterType="Mission" >
-		INSERT INTO mission (content, min_m, max_m, min_w, max_w)
+		INSERT INTO MISSION (content, min_m, max_m, min_w, max_w)
 		VALUES (#{content}, #{maleMin}, #{maleMax}, #{femaleMin},#{femaleMax});
 	</insert>
 	
 	<delete id="deleteMission" parameterType="int">
-		DELETE FROM mission
+		DELETE FROM MISSION
 		WHERE id = #{id};
 	</delete>
 	
 	<update id="updateMission" parameterType="Mission">
-		UPDATE mission SET 
+		UPDATE MISSION SET 
 		content = #{content},
 		min_m = #{maleMin},
 		max_m = #{maleMax},
@@ -26,23 +26,23 @@
 	</update>
 	
 	<select id="selectOne" parameterType="int" resultType="Mission">
-		SELECT * FROM mission WHERE id = #{id};
+		SELECT * FROM MISSION WHERE id = #{id};
 	</select>
 
 	<select id = "selectAll" resultType="Mission">
 		SELECT id , content, min_m as maleMin, max_m as maleMax, min_w as femaleMin, max_w as femaleMax 
-		FROM mission;
+		FROM MISSION;
 	</select>
 	
 	<!-- 현재 존재하는 미션의 개수 반환 -->
 	<select id = "countAll" resultType="int">
-		SELECT count(*) FROM mission;
+		SELECT count(*) FROM MISSION;
 	</select>
 	
 	<!-- 존재하는 미션 중 randomNum 번째 index에 있는 미션 반환 -->
 	<select id = "selectMissionByIndex" parameterType="int" resultType="Mission">
 		SELECT id , content, min_m as maleMin, max_m as maleMax, min_w as femaleMin, max_w as femaleMax
-		FROM mission
+		FROM MISSION
 		LIMIT 1 OFFSET #{randomNum};
 	</select>
 	

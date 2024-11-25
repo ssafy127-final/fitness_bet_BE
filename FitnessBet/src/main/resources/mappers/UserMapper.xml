@@ -6,72 +6,72 @@
 
 <mapper namespace="com.fitnessbet.user.model.dao.UserDao">
 	<insert id="insertUser" parameterType="User">
-		INSERT INTO user (id,pw,name,campus,class_num,gender,admin,phone)
+		INSERT INTO USER (id,pw,name,campus,class_num,gender,admin,phone)
 		VALUES(#{id},#{pw},#{name},#{campus},#{classNum},#{gender},#{admin},#{phone})
 	</insert>
 	
 	<select id="findById" parameterType="String" resultType="User">
-		SELECT * from user 
+		SELECT * from USER 
 		WHERE id = #{id};
 	</select>
 
 	<!-- 유저 삭제 / 관리자만 접근 가능하도록-->
 	<delete id="deleteUser" parameterType="String">
-		DELETE FROM user
+		DELETE FROM USER
 		WHERE id = #{id};
 	</delete>
 	
 	<!-- 반 별 모든 학생들 리스트 뽑기 -->
 	<select id="selectAll" parameterType="User" resultType="User">
-		SELECT * FROM user
+		SELECT * FROM USER
 		WHERE class_num = #{classNum}
 		AND campus = #{campus};
 	</select>
 	
 	<!-- 반 별 모든 학생들 수 반환 -->
 	<select id="countAll" parameterType="User" resultType="int">
-		SELECT count(*) FROM user
+		SELECT count(*) FROM USER
 		WHERE class_num = #{classNum}
 		AND campus = #{campus};
 	</select>
 	
 	<!-- 가입 대기 목록 뽑기 / 가입대기는 accept 값이 항상 0이므로 파라미터 입력이 필요없다. -->
 	<select id="selectUnapproved" resultType="User">
-		SELECT * FROM user
+		SELECT * FROM USER
 		WHERE class_num = #{classNum}
 		AND campus = #{campus}
 		AND accept = 0;
 	</select>
 	
 	<update id="updateAccepted" parameterType="String">
-		UPDATE user SET accept = 1
+		UPDATE USER SET accept = 1
 		WHERE id = #{id};
 	</update>
 	
 	<select id = "selectChallenger" parameterType="User" resultType="User">
-		SELECT * FROM user
+		SELECT * FROM USER
 		WHERE class_num = #{classNum}
 		AND campus = #{campus}
 		LIMIT 1 OFFSET #{randomNum};
 	</select>
 	
 	<update id="updateReward" parameterType="User">
-	UPDATE user SET current_point = #{currentPoint}, total_point = #{totalPoint}
+	UPDATE USER SET current_point = #{currentPoint}, total_point = #{totalPoint}
 	WHERE id = #{id};
 	</update>
 	
 	<update id="minusBettingPoint" parameterType="User">
-	UPDATE user SET current_point = #{currentPoint}
+	UPDATE USER SET current_point = #{currentPoint}
 	WHERE id = #{id};
 	</update>
 	
 	<update id = "visitedCheck" parameterType="User">
-	UPDATE user SET visited = CURRENT_DATE()
+	UPDATE USER SET visited = CURRENT_DATE()
 	WHERE id = #{id};
 	</update>
 	
 	<insert id= "insertPointHistory" parameterType="PointHistory">
-	INSERT INTO point_history (user_id, product_id, betting_id, category, record_date, point) VALUES
+	INSERT INTO POINT_HISTORY (user_id, product_id, betting_id, category, record_date, point) VALUES
 	(#{userId}, #{productId}, #{bettingId}, #{category}, now(), #{point})
 	</insert>
 	
@@ -87,10 +87,10 @@
 		sum(CASE WHEN bh.choice = b.result THEN 1 ELSE 0 END) AS winGames, 
 		u.total_point AS totalPoint, 
 		u.current_point AS currentPoint
-	FROM user u
-	LEFT JOIN betting_history bh
+	FROM USER u
+	LEFT JOIN BETTING_HISTORY bh
 	ON bh.player =u.id
-	LEFT JOIN betting b
+	LEFT JOIN BETTING b
 	ON b.id = bh.betting_id AND b.result IN (1, -1)
 	WHERE u.campus = #{campus} AND u.class_num = #{classNum}
 	GROUP BY u.id;
