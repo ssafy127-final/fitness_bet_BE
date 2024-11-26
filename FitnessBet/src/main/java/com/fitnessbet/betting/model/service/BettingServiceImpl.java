@@ -215,6 +215,11 @@ public class BettingServiceImpl implements BettingService {
 		System.out.println(bh.getPoint());
 		int netProfit = bh.getPrize() - bh.getPoint();
 		return netProfit;
+	}
+
+	@Override
+	public boolean checkBettingStatus(int id) {
+		return dao.selectOneBetting(id).getResult()==0;
 	};
 
 }

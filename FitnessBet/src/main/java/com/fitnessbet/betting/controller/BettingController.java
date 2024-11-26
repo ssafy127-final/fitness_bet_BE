@@ -64,6 +64,9 @@ public class BettingController {
 	@PutMapping("/{id}")
 	public ResponseEntity<String> joinBetting(@PathVariable("id") int id, @RequestBody BettingHistory bettingInfo) {
 		bettingInfo.setBettingId(id);
+		if(!service.checkBettingStatus(id)) {
+			return new ResponseEntity<>("참여 불가", HttpStatus.BAD_REQUEST);
+		}
 		if (service.joinBetting(bettingInfo)) {
 			return new ResponseEntity<>("참여 완료", HttpStatus.OK);
 		}

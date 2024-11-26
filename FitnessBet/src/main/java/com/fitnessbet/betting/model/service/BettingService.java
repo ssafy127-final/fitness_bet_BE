@@ -44,4 +44,6 @@ public interface BettingService {
 	
 	int getNetProfit(String id, int bettingId);
 
+	boolean checkBettingStatus(int id);
+
 }

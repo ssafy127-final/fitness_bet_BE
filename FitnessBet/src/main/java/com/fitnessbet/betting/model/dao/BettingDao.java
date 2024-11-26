@@ -44,4 +44,5 @@ public interface BettingDao {
 	
 	BettingHistory selectPrizeAndPointById(BettingHistory bettingInfo);
 
+
 }
