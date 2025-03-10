@@ -68,9 +68,9 @@
 </div>
 
 ## 기능명세서
-<img src="./assets/기능명세서_1.png" width=500>
-<img src="./assets/기능명세서_2.png" width=500>
-<img src="./assets/기능명세서_3.png" width=500>
+<img src="./assets/기능명세서_1.png" width=500>
+<img src="./assets/기능명세서_2.png" width=500>
+<img src="./assets/기능명세서_3.png" width=500>
 
 ## UML
 <img src="./assets/UML_1.png" width=500>
